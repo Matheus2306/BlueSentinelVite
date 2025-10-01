@@ -289,3 +289,102 @@ h1.brand {
     padding: 1rem;
   }
 }
+
+/* Registration page styles (screenshot match) */
+.register-page {
+  width: 100%;
+  min-height: calc(100vh - 64px);
+  padding: 3rem 1rem;
+  background: linear-gradient(180deg, #2b0f47 0%, #3b156f 60%);
+}
+
+.register-card {
+  width: 480px;
+  max-width: calc(100% - 2rem);
+  background: rgba(30, 14, 39, 0.55);
+  border-radius: 16px;
+  box-shadow: 0 12px 40px rgba(15, 8, 30, 0.6);
+  padding-top: 64px; /* space for circular logo */
+  backdrop-filter: blur(6px) saturate(1.05);
+  color: #eee;
+  pointer-events: auto;
+}
+
+.register-card .card-title {
+  color: #f2e9ff;
+  font-weight: 600;
+}
+
+.top-logo {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  top: -42px;
+  width: 84px;
+}
+
+.logo-circle {
+  width: 84px;
+  height: 84px;
+  background: linear-gradient(
+    180deg,
+    rgba(90, 63, 123, 0.95),
+    rgba(60, 20, 80, 0.95)
+  );
+  border-radius: 50%;
+  border: 6px solid rgba(255, 255, 255, 0.06);
+  box-shadow: 0 8px 20px rgba(17, 11, 34, 0.6);
+  overflow: hidden;
+}
+
+.logo-circle img {
+  width: 56px;
+  height: 56px;
+  object-fit: contain;
+}
+
+.back-btn {
+  top: 18px;
+  left: 18px;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.register-form .form-control {
+  background: rgba(255, 255, 255, 0.12);
+  border: none;
+  color: #fff;
+  padding: 12px 18px;
+  height: 44px;
+}
+
+.register-form .form-label {
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.85);
+  margin-bottom: 6px;
+}
+
+.register-form .form-control::placeholder {
+  color: rgba(255, 255, 255, 0.78);
+}
+
+.register-submit {
+  background: linear-gradient(180deg, #2b0f47, #3b156f);
+  border: none;
+  color: #fff;
+  box-shadow: 0 6px 16px rgba(20, 8, 50, 0.5);
+}
+
+@media (max-width: 540px) {
+  .register-card {
+    width: 100%;
+    padding-top: 56px;
+  }
+  .top-logo {
+    top: -36px;
+    width: 72px;
+  }
+  .logo-circle {
+    width: 72px;
+    height: 72px;
+  }
+}

@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router";
 import LogoHeader from "../img/logoHeader.png";
 
 const Header = () => {
@@ -16,13 +17,13 @@ const Header = () => {
         <button className="icon-btn" aria-label="Analytics">
           <i id="graphIcon" className="bi bi-graph-up" aria-hidden="true"></i>
         </button>
-        <button className="icon-btn" aria-label="Profile">
+        <Link to="/register" className="icon-btn" aria-label="Profile">
           <i
             id="personIcon"
             className="bi bi-person-fill"
             aria-hidden="true"
           ></i>
-        </button>
+        </Link>
         <button className="icon-btn" aria-label="Settings">
           <i
             id="settingsIcon"
