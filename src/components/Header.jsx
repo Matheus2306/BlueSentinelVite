@@ -1,8 +1,10 @@
-import React from "react";
-import { Link } from "react-router";
+// ...existing code...
+import { useNavigate } from "react-router";
 import LogoHeader from "../img/logoHeader.png";
 
 const Header = () => {
+  const navigate = useNavigate();
+
   return (
     <header id="header">
       <img src={LogoHeader} alt="Logo Blue Sentinel" id="logo" />
@@ -14,16 +16,32 @@ const Header = () => {
             aria-hidden="true"
           ></i>
         </button>
+
         <button className="icon-btn" aria-label="Analytics">
           <i id="graphIcon" className="bi bi-graph-up" aria-hidden="true"></i>
         </button>
-        <Link to="/register" className="icon-btn" aria-label="Profile">
+
+        {/* Make this a button for accessibility and put navigate inside the component */}
+        <button
+          className="icon-btn"
+          aria-label="Profile"
+          onClick={() => {
+            // If there's a stored user id, go to the login page; otherwise go to register
+            const userId = localStorage.getItem("userId");
+            if (userId) {
+              navigate("/login");
+            } else {
+              navigate("/register");
+            }
+          }}
+        >
           <i
             id="personIcon"
             className="bi bi-person-fill"
             aria-hidden="true"
           ></i>
-        </Link>
+        </button>
+
         <button className="icon-btn" aria-label="Settings">
           <i
             id="settingsIcon"
@@ -31,6 +49,7 @@ const Header = () => {
             aria-hidden="true"
           ></i>
         </button>
+
         <button className="icon-btn" aria-label="Toggle dark mode">
           <i id="moonIcon" className="bi bi-moon-fill" aria-hidden="true"></i>
         </button>
@@ -40,3 +59,4 @@ const Header = () => {
 };
 
 export default Header;
+// ...existing code...
