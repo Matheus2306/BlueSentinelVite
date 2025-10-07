@@ -1,5 +1,6 @@
 // ...existing code...
 import { useNavigate } from "react-router";
+import { toggleTheme } from "../theme";
 import LogoHeader from "../img/logoHeader.png";
 
 const Header = () => {
@@ -18,7 +19,7 @@ const Header = () => {
           ></i>
         </button>
 
-        <button className="icon-btn" aria-label="Analytics">
+        <button className="icon-btn" aria-label="Analytics" onClick={() => navigate("/dashboard")}>
           <i id="graphIcon" className="bi bi-graph-up" aria-hidden="true"></i>
         </button>
 
@@ -48,10 +49,17 @@ const Header = () => {
             id="settingsIcon"
             className="bi bi-gear-fill"
             aria-hidden="true"
+            onClick={() => navigate("/settings")}
           ></i>
         </button>
 
-        <button className="icon-btn" aria-label="Toggle dark mode">
+        <button
+          className="icon-btn"
+          aria-label="Toggle dark mode"
+          onClick={() => {
+            toggleTheme();
+          }}
+        >
           <i id="moonIcon" className="bi bi-moon-fill" aria-hidden="true"></i>
         </button>
       </nav>

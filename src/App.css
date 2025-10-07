@@ -1,5 +1,4 @@
-* {
-}
+/* global reset intentionally left blank */
 
 /* Body background fallback color (used behind the hero image) */
 html,
@@ -11,17 +10,24 @@ body {
 
 /* Use Source Serif 4 loaded from index.html; fall back to generic serif */
 /* Use Source Serif 4 loaded from index.html; fall back to generic serif */
+:root {
+  --bg: linear-gradient(
+    180deg,
+    #1c1264 0%,
+    #381d89 57%,
+    #3a1789 79%,
+    #391f80 100%
+  );
+  --text-color: #ffffff;
+  --primary-color: #4a0ce0;
+  --header-bg: rgba(10, 10, 10, 0.35);
+  --icon-color: #ffffff;
+}
+
 body {
   font-family: "Source Serif 4", Georgia, "Times New Roman", serif;
-  color: #fff;
-  background: linear-gradient(
-      180deg,
-      #1c1264 0%,
-      #381d89 100%,
-      #3a1789 100%,
-      #391f80 100%
-    )
-    fixed;
+  color: var(--text-color, #fff);
+  background: var(--bg, linear-gradient(180deg, #1c1264 0%, #381d89 100%)) fixed;
 }
 
 /* HERO / BACKGROUND IMAGE CONTAINER */
@@ -138,11 +144,6 @@ h1.brand {
   left: 0;
   right: 0;
   height: 64px;
-  background: linear-gradient(
-    90deg,
-    rgba(10, 10, 10, 0.35),
-    rgba(10, 10, 10, 0.15)
-  );
   padding: 0 1rem;
   display: flex;
   align-items: center;
@@ -150,6 +151,32 @@ h1.brand {
   z-index: 1000;
   backdrop-filter: blur(6px);
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.35);
+}
+
+/* Posiciona o botão Home no canto superior direito da página */
+#homeBtn {
+  position: fixed;
+  top: 12px;
+  right: 12px;
+  z-index: 1100; /* acima do header e imagens */
+  width: 56px;
+  height: 56px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+  background: rgba(0, 0, 0, 0.45);
+  color: var(--text-color, #fff);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.45);
+}
+
+@media (max-width: 640px) {
+  #homeBtn {
+    width: 44px;
+    height: 44px;
+    top: 8px;
+    right: 8px;
+  }
 }
 
 #videoIcon,
@@ -160,7 +187,7 @@ h1.brand {
   width: 32px;
   height: 32px;
   font-size: 1.75rem; /* ensure icon font scales */
-  color: #fff;
+  color: var(--icon-color, #fff);
   cursor: pointer;
   display: inline-flex;
   align-items: center;
@@ -172,7 +199,7 @@ h1.brand {
 .icon-btn {
   background: rgba(255, 255, 255, 0.06);
   border: none;
-  color: #fff;
+  color: var(--text-color, #fff);
   padding: 6px;
   border-radius: 8px;
   display: inline-flex;
@@ -205,7 +232,7 @@ h1.brand {
 #page-content h1,
 #page-content h2,
 #page-content p {
-  color: #fff;
+  color: var(--text-color, #fff);
   text-shadow: 0 2px 8px rgba(0, 0, 0, 0.7);
 }
 
@@ -229,7 +256,7 @@ h1.brand {
 
 /* Purple info band below the hero to match the screenshot */
 #info-section {
-  color: #fff;
+  color: var(--text-color, #fff);
   padding: 3.5rem 1rem;
 }
 
@@ -253,7 +280,7 @@ h1.brand {
 
 /* Drone description band (similar to #info-section but slightly darker) */
 #drone-section {
-  color: #fff;
+  color: var(--text-color, #fff);
   padding: 3rem 1rem;
 }
 
@@ -271,7 +298,7 @@ h1.brand {
 }
 #card-selection {
   background-color: #413b6b;
-  color: #fff;
+  color: var(--text-color, #fff);
   width: 623px;
   max-width: calc(100% - 2rem);
   height: 1041px;
@@ -329,7 +356,7 @@ h1.brand {
 }
 
 .register-card .card-title {
-  color: #f2e9ff;
+  color: var(--text-color, #f2e9ff);
   font-weight: 600;
 }
 
@@ -381,7 +408,7 @@ h1.brand {
 
 .register-form .form-control {
   background: rgba(255, 255, 255, 0.12);
-  color: #fff;
+  color: var(--text-color, #fff);
   padding: 12px 18px;
   height: 108.53px;
   width: 453.27px;
@@ -402,7 +429,7 @@ h1.brand {
 .register-submit {
   background: linear-gradient(180deg, #2b0f47, #3b156f);
   border: none;
-  color: #fff;
+  color: var(--text-color, #fff);
   box-shadow: 0 6px 16px rgba(20, 8, 50, 0.5);
 }
 
@@ -429,7 +456,6 @@ h1.brand {
 }
 #card-selection-2 {
   background-color: #413b6b;
-  color: #fff;
   width: 1334px;
   max-width: calc(100% - 2rem);
   height: auto;
@@ -455,7 +481,6 @@ h1.brand {
 }
 #last-card {
   background-color: #413b6b;
-  color: #fff;
   width: 1124px;
   max-width: calc(100% - 2rem);
   height: 453;
@@ -476,11 +501,11 @@ h1.brand {
 }
 #last-card-button {
   background-color: #1c0b2b;
-  color: #fff;
   width: 352px;
   height: 113px;
   border-radius: 100px;
   font-size: 48px;
+  color: #ffffff;
 }
 #card-register {
   width: 640px;
@@ -515,7 +540,7 @@ h1.brand {
 
 /* Título */
 .title {
-  color: #fff;
+  color: var(--text-color, #fff);
   font-weight: 500;
   letter-spacing: 0.5px;
 }
@@ -537,7 +562,7 @@ h1.brand {
 /* Botão customizado */
 .btn-custom {
   background-color: #2d0e59;
-  color: #fff;
+  color: var(--text-color, #fff);
   border-radius: 10px;
   font-size: 0.95rem;
   padding: 10px;
@@ -605,7 +630,7 @@ h1.brand {
   height: 56px;
   border-radius: 10px;
   background: rgba(0, 0, 0, 0.45);
-  color: #fff;
+  color: var(--text-color, #fff);
   border: none;
   box-shadow: 0 6px 18px rgba(0, 0, 0, 0.45);
 }
@@ -624,4 +649,103 @@ h1.brand {
   .cam-back-btn i {
     font-size: 1.15rem;
   }
+}
+.settings-page {
+  height: 100vh;
+  width: 100%;
+  background: linear-gradient(180deg, #1a0066, #3a0ca3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: "Source Serif 4", Georgia, "Times New Roman", serif;
+  color: var(--text-color, #fff);
+}
+
+.settings-card {
+  background-color: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(10px);
+  width: 600px;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.4);
+  border-radius: 10px;
+}
+
+.settings-icon {
+  background-color: #1a0033;
+  border-radius: 50%;
+  width: 60px;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 15px;
+  font-size: 1.8rem;
+}
+
+.btn-primary {
+  background-color: var(--primary-color, #4a0ce0) !important;
+  border: none;
+}
+
+.btn-secondary {
+  background-color: rgba(255, 255, 255, 0.25) !important;
+  border: none;
+}
+
+h4,
+h5 {
+  color: var(--text-color, #fff);
+}
+.dashboard-page {
+  min-height: 100vh;
+  background: linear-gradient(180deg, #1a0066, #3a0ca3);
+  color: #fff;
+  padding: 30px;
+}
+
+.top-info h1 {
+  font-size: 3rem;
+}
+
+.map-box {
+  width: min(1100px, 48%);
+  min-width: 520px;
+  height: 420px;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.45);
+}
+
+.map {
+  width: 100%;
+  height: 100%;
+  border-radius: 10px;
+}
+
+@media (max-width: 900px) {
+  .map-box,
+  .chart-box {
+    width: 100%;
+    min-width: unset;
+  }
+  .map-box {
+    height: 360px;
+  }
+}
+
+.charts-container {
+  display: flex;
+  justify-content: center;
+  gap: 40px;
+  margin-top: 50px;
+  flex-wrap: wrap;
+}
+
+.chart-box {
+  background-color: rgba(255, 255, 255, 0.06);
+  border-radius: 15px;
+  padding: 28px;
+  backdrop-filter: blur(6px);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.45);
+  width: min(1100px, 48%);
+  min-width: 520px;
 }
