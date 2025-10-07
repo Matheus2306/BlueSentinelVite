@@ -14,6 +14,7 @@ const Header = () => {
             id="videoIcon"
             className="bi bi-camera-video-fill"
             aria-hidden="true"
+            onClick={() => navigate("/cam")}
           ></i>
         </button>
 
