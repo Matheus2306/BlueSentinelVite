@@ -25,7 +25,15 @@ const Header = () => {
         <button
           className="icon-btn"
           aria-label="Profile"
-          onClick={() => navigate("/register")}
+          onClick={() => {
+            // If there's a stored user id, go to the login page; otherwise go to register
+            const userId = localStorage.getItem("userId");
+            if (userId) {
+              navigate("/login");
+            } else {
+              navigate("/register");
+            }
+          }}
         >
           <i
             id="personIcon"

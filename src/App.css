@@ -486,3 +486,84 @@ h1.brand {
   width: 640px;
   height: 928.88px;
 }
+/* Fundo geral */
+.profile-edit-container {
+  height: 100vh;
+  width: 100%;
+  background: linear-gradient(180deg, #190537 0%, #341a7a 100%);
+}
+
+/* Card principal */
+.profile-card {
+  background-color: rgba(20, 10, 45, 0.85);
+  width: 350px;
+  border-radius: 15px;
+  box-shadow: 0px 6px 18px rgba(0, 0, 0, 0.4);
+}
+
+/* Ícone circular */
+.profile-icon {
+  background-color: #341a7a;
+  border-radius: 50%;
+  width: 80px;
+  height: 80px;
+  position: absolute;
+  top: -40px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+/* Título */
+.title {
+  color: #fff;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+}
+
+/* Inputs customizados */
+.input-custom {
+  background-color: #cfc6f2 !important;
+  border: none !important;
+  border-radius: 8px;
+  color: #000;
+  font-size: 0.95rem;
+  padding: 10px;
+}
+
+.input-custom:focus {
+  box-shadow: 0 0 0 0.2rem rgba(111, 66, 193, 0.4);
+}
+
+/* Botão customizado */
+.btn-custom {
+  background-color: #2d0e59;
+  color: #fff;
+  border-radius: 10px;
+  font-size: 0.95rem;
+  padding: 10px;
+  border: none;
+  transition: 0.3s;
+}
+
+.btn-custom:hover {
+  background-color: #441a8d;
+  transform: scale(1.03);
+}
+
+/* Responsivo */
+@media (max-width: 400px) {
+  .profile-card {
+    width: 90%;
+    padding: 1.5rem;
+  }
+
+  .profile-icon {
+    width: 70px;
+    height: 70px;
+    top: -35px;
+  }
+
+  .title {
+    font-size: 1.1rem;
+  }
+}
