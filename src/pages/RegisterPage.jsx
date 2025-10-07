@@ -7,7 +7,10 @@ const RegisterPage = () => {
 
   return (
     <div className="register-page d-flex align-items-center justify-content-center">
-      <div className="register-card position-relative text-start p-4">
+      <div
+        id="card-register"
+        className="register-card position-relative text-center p-4"
+      >
         {/* top circular logo */}
         <div className="top-logo d-flex justify-content-center">
           <div className="logo-circle d-flex align-items-center justify-content-center">
@@ -21,7 +24,7 @@ const RegisterPage = () => {
           onClick={() => navigate(-1)}
           aria-label="Voltar"
         >
-          <i className="bi bi-arrow-left" style={{ fontSize: "1.35rem" }}></i>
+          <i className="bi bi-arrow-left" style={{ fontSize: "4rem" }}></i>
         </button>
 
         <h5 className="card-title text-center mt-3 mb-4">Cadastrar</h5>
@@ -31,7 +34,7 @@ const RegisterPage = () => {
             <label className="form-label">Nome Completo</label>
             <input
               type="text"
-              className="form-control rounded-pill"
+              className="form-control"
               placeholder="Seu nome"
             />
           </div>
@@ -40,7 +43,7 @@ const RegisterPage = () => {
             <label className="form-label">Email</label>
             <input
               type="email"
-              className="form-control rounded-pill"
+              className="form-control"
               placeholder="exemplo@gmail.com"
             />
           </div>
@@ -49,7 +52,7 @@ const RegisterPage = () => {
             <label className="form-label">Senha</label>
             <input
               type="password"
-              className="form-control rounded-pill"
+              className="form-control"
               placeholder="••••••••"
             />
           </div>
@@ -58,7 +61,7 @@ const RegisterPage = () => {
             <label className="form-label">Confirmar Senha</label>
             <input
               type="password"
-              className="form-control rounded-pill"
+              className="form-control"
               placeholder="••••••••"
             />
           </div>
