@@ -22,12 +22,14 @@ body {
   --primary-color: #4a0ce0;
   --header-bg: rgba(10, 10, 10, 0.35);
   --icon-color: #ffffff;
+  --root-font-size: 16px;
 }
 
 body {
   font-family: "Source Serif 4", Georgia, "Times New Roman", serif;
   color: var(--text-color, #fff);
   background: var(--bg, linear-gradient(180deg, #1c1264 0%, #381d89 100%)) fixed;
+  font-size: var(--root-font-size, 16px);
 }
 
 /* HERO / BACKGROUND IMAGE CONTAINER */

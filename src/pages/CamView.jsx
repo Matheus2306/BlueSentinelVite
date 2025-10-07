@@ -1,9 +1,11 @@
 import React from "react";
 import image from "../img/camImage.png";
 import { useNavigate } from "react-router";
+import { useTranslation } from "react-i18next";
 
 const CamView = () => {
   const navigate = useNavigate();
+  const { t } = useTranslation();
   return (
     <>
       <div id="camView" className="d-flex justify-content-center">
@@ -15,8 +17,8 @@ const CamView = () => {
           {/* ícone sobreposto no canto superior esquerdo */}
           <button
             className="icon-btn cam-back-btn"
-            aria-label="Voltar"
-            title="Voltar"
+            aria-label={t("Voltar")}
+            title={t("Voltar")}
             type="button"
             onClick={() => navigate(-1)}
           >

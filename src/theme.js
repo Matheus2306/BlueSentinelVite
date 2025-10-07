@@ -5,6 +5,7 @@
 
 const STORAGE_COLOR_KEY = "themeColor";
 const STORAGE_MODE_KEY = "themeMode";
+const STORAGE_FONT_KEY = "rootFontSize";
 
 function applyCssVars({ bg, text, primary, headerBg, iconColor }) {
   const root = document.documentElement;
@@ -13,6 +14,16 @@ function applyCssVars({ bg, text, primary, headerBg, iconColor }) {
   if (primary) root.style.setProperty("--primary-color", primary);
   if (headerBg) root.style.setProperty("--header-bg", headerBg);
   if (iconColor) root.style.setProperty("--icon-color", iconColor);
+}
+
+function applyFontSize(sizePx) {
+  try {
+    const root = document.documentElement;
+    if (!sizePx) return;
+    root.style.setProperty("--root-font-size", `${sizePx}px`);
+  } catch {
+    // ignore
+  }
 }
 
 function getStoredColor() {
@@ -30,6 +41,15 @@ function getStoredMode() {
     return m || "sistema";
   } catch {
     return "sistema";
+  }
+}
+
+function getStoredFontSize() {
+  try {
+    const v = localStorage.getItem(STORAGE_FONT_KEY);
+    return v ? Number(v) : null;
+  } catch {
+    return null;
   }
 }
 
@@ -68,6 +88,9 @@ export function initTheme() {
     mode === "sistema" ? "escuro" : mode
   );
   applyCssVars(vars);
+  // apply persisted font size if any
+  const storedFont = getStoredFontSize();
+  if (storedFont) applyFontSize(storedFont);
 }
 
 export function toggleTheme() {
@@ -93,6 +116,15 @@ export function setThemeColor(hexColor) {
   const mode = getStoredMode() === "sistema" ? "escuro" : getStoredMode();
   const vars = buildVarsFromColor(hexColor, mode);
   applyCssVars(vars);
+}
+
+export function setRootFontSize(px) {
+  try {
+    localStorage.setItem(STORAGE_FONT_KEY, String(px));
+  } catch {
+    // ignore storage errors
+  }
+  applyFontSize(px);
 }
 
 export default {

@@ -12,6 +12,7 @@ import SettingsPage from "./pages/SettingsPage.jsx";
 import Dashboard from "./pages/Dashboard.jsx";
 import { BrowserRouter, Route, Routes } from "react-router";
 
+import "./i18n"; // importa a config
 // initialize theme variables from localStorage before first render
 initTheme();
 

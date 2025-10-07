@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router";
+import { useTranslation } from "react-i18next";
 
 const LoginPage = () => {
   const [formData, setFormData] = useState({
@@ -19,6 +20,7 @@ const LoginPage = () => {
   };
 
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   useEffect(() => {
     try {
@@ -44,11 +46,11 @@ const LoginPage = () => {
           <i className="bi bi-person-fill fs-1 text-white"></i>
         </div>
 
-        <h2 className="title mt-5 mb-4">alterações</h2>
+        <h2 className="title mt-5 mb-4">{t("Alteracoes")}</h2>
 
         <form onSubmit={handleSubmit} className="d-flex flex-column gap-3">
           <div className="text-start">
-            <label className="form-label text-light">Nome</label>
+            <label className="form-label text-light">{t("Nome")}</label>
             <input
               type="text"
               name="nome"
@@ -59,7 +61,7 @@ const LoginPage = () => {
           </div>
 
           <div className="text-start">
-            <label className="form-label text-light">Email</label>
+            <label className="form-label text-light">{t("Email")}</label>
             <input
               type="email"
               name="email"
@@ -70,7 +72,7 @@ const LoginPage = () => {
           </div>
 
           <div className="text-start">
-            <label className="form-label text-light">Senha</label>
+            <label className="form-label text-light">{t("Senha")}</label>
             <input
               type="password"
               name="senha"
@@ -85,7 +87,7 @@ const LoginPage = () => {
             className="btn btn-custom mt-3"
             onClick={() => navigate(-1)}
           >
-            Salvar Alterações
+            {t("SalvarAlteracoes")}
           </button>
         </form>
       </div>

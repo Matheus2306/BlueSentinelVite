@@ -1,7 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router";
+import { useTranslation } from "react-i18next";
+import { setRootFontSize } from "../theme";
 
 const SettingsPage = () => {
+  const { t, i18n } = useTranslation();
   const [theme, setTheme] = useState("sistema");
   const [language, setLanguage] = useState("portugues");
   const [fontSize, setFontSize] = useState(16);
@@ -9,11 +12,34 @@ const SettingsPage = () => {
 
   const navigate = useNavigate();
 
-  return (
+  const changeLanguage = (lang) => {
+    setLanguage(lang === "pt" ? "portugues" : "ingles");
+    i18n.changeLanguage(lang);
+  };
 
+  useEffect(() => {
+    try {
+      const stored = localStorage.getItem("rootFontSize");
+      if (stored) {
+        const n = Number(stored);
+        setFontSize(n);
+        setRootFontSize(n);
+      }
+    } catch {
+      // ignore
+    }
+  }, []);
+
+  return (
     <>
       <header>
-        <button id="homeBtn" className="icon-btn fs-1" title="Home" type="button" onClick={() => navigate("/")}>
+        <button
+          id="homeBtn"
+          className="icon-btn fs-1"
+          title={t("Home")}
+          type="button"
+          onClick={() => navigate("/")}
+        >
           <i className="bi bi-house-fill"></i>
         </button>
       </header>
@@ -22,11 +48,11 @@ const SettingsPage = () => {
           <div className="settings-icon">
             <i className="bi bi-globe2"></i>
           </div>
-          <h4 className="mb-4">Alterações</h4>
+          <h4 className="mb-4">{t("Alteracoes")}</h4>
 
           <div className="row mb-3 align-items-center">
             <div className="col-5 text-end fw-semibold">
-              Preferência de Tema:
+              {t("PreferenciaDeTema")}
             </div>
             <div className="col-7 text-start">
               <button
@@ -35,7 +61,7 @@ const SettingsPage = () => {
                 }`}
                 onClick={() => setTheme("sistema")}
               >
-                Sistema
+                {t("Sistema")}
               </button>
               <button
                 className={`btn btn-sm me-2 ${
@@ -43,7 +69,7 @@ const SettingsPage = () => {
                 }`}
                 onClick={() => setTheme("claro")}
               >
-                Claro
+                {t("Claro")}
               </button>
               <button
                 className={`btn btn-sm ${
@@ -51,44 +77,53 @@ const SettingsPage = () => {
                 }`}
                 onClick={() => setTheme("escuro")}
               >
-                Escuro
+                {t("Escuro")}
               </button>
             </div>
           </div>
 
           <div className="row mb-4 align-items-center">
-            <div className="col-5 text-end fw-semibold">Idioma:</div>
+            <div className="col-5 text-end fw-semibold">{t("Idioma")}</div>
             <div className="col-7 text-start">
               <button
                 className={`btn btn-sm me-2 ${
                   language === "portugues" ? "btn-primary" : "btn-secondary"
                 }`}
-                onClick={() => setLanguage("portugues")}
+                onClick={() => changeLanguage("pt")}
               >
-                Português
+                {t("Portugues")}
               </button>
               <button
                 className={`btn btn-sm ${
                   language === "ingles" ? "btn-primary" : "btn-secondary"
                 }`}
-                onClick={() => setLanguage("ingles")}
+                onClick={() => changeLanguage("en")}
               >
-                Inglês
+                {t("Ingles")}
               </button>
             </div>
           </div>
 
-          <h5 className="mb-3">Acessibilidade</h5>
+          <h5 className="mb-3">{t("Acessibilidade")}</h5>
 
           <div className="mb-3">
-            <label className="fw-semibold">Tamanho da Fonte:</label>
+            <label className="fw-semibold">{t("TamanhoDaFonte")}</label>
             <div className="d-flex align-items-center justify-content-center">
               <input
                 type="range"
                 min="12"
                 max="24"
                 value={fontSize}
-                onChange={(e) => setFontSize(e.target.value)}
+                onChange={(e) => {
+                  const v = Number(e.target.value);
+                  setFontSize(v);
+                  try {
+                    localStorage.setItem("rootFontSize", String(v));
+                  } catch {
+                    // ignore storage errors
+                  }
+                  setRootFontSize(v);
+                }}
                 className="form-range w-50 mx-3"
               />
               <span>{fontSize}</span>
@@ -96,7 +131,7 @@ const SettingsPage = () => {
           </div>
 
           <div className="mb-3">
-            <label className="fw-semibold me-3">Leitura de tela:</label>
+            <label className="fw-semibold me-3">{t("LeituraDeTela")}</label>
             <div
               className="form-check form-switch d-inline-block"
               style={{ transform: "scale(1.3)" }}

@@ -2,13 +2,15 @@
 import { useNavigate } from "react-router";
 import { toggleTheme } from "../theme";
 import LogoHeader from "../img/logoHeader.png";
+import { useTranslation } from "react-i18next";
 
 const Header = () => {
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   return (
     <header id="header">
-      <img src={LogoHeader} alt="Logo Blue Sentinel" id="logo" />
+      <img src={LogoHeader} alt={t("Home")} id="logo" />
       <nav className="header-icons" aria-label="User actions">
         <button className="icon-btn" aria-label="Video">
           <i
@@ -19,7 +21,11 @@ const Header = () => {
           ></i>
         </button>
 
-        <button className="icon-btn" aria-label="Analytics" onClick={() => navigate("/dashboard")}>
+        <button
+          className="icon-btn"
+          aria-label="Analytics"
+          onClick={() => navigate("/dashboard")}
+        >
           <i id="graphIcon" className="bi bi-graph-up" aria-hidden="true"></i>
         </button>
 
@@ -44,7 +50,7 @@ const Header = () => {
           ></i>
         </button>
 
-        <button className="icon-btn" aria-label="Settings">
+        <button className="icon-btn" aria-label={t("Settings")}>
           <i
             id="settingsIcon"
             className="bi bi-gear-fill"
@@ -55,7 +61,7 @@ const Header = () => {
 
         <button
           className="icon-btn"
-          aria-label="Toggle dark mode"
+          aria-label={t("ToggleDarkMode")}
           onClick={() => {
             toggleTheme();
           }}
