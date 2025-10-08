@@ -14,6 +14,7 @@ import {
 import { MapContainer, TileLayer, CircleMarker, Popup } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import Header from "../components/Header";
+import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router";
 
 const Dashboard = () => {
@@ -57,6 +58,7 @@ const Dashboard = () => {
   ];
 
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   return (
     <>
@@ -74,12 +76,12 @@ const Dashboard = () => {
       <div className="dashboard-page">
         <div className="top-info d-flex justify-content-around align-items-center">
           <div className="text-center">
-            <h4>Tempo de atividade dos drones</h4>
+            <h4>{t("TempoDeAtividade")}</h4>
             <h1 className="fw-bold">{timer}</h1>
           </div>
           <div className="text-center">
-            <h4>Quantidade em Ativa</h4>
-            <h1 className="fw-bold">27</h1>
+            <h4>{t("QuantidadeEmAtiva")}</h4>
+            <h1 className="fw-bold">7</h1>
           </div>
           <div className="map-box">
             <MapContainer

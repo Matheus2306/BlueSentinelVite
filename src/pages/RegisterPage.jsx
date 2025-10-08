@@ -1,9 +1,11 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router";
 import logoHeader from "../img/logoHeader.png";
+import { useTranslation } from "react-i18next";
 
 const RegisterPage = () => {
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const [form, setForm] = useState({
     nome: "",
     email: "",
@@ -44,16 +46,16 @@ const RegisterPage = () => {
           type="button"
           className="btn btn-link text-white position-absolute back-btn"
           onClick={() => navigate(-1)}
-          aria-label="Voltar"
+          aria-label={t("Voltar")}
         >
           <i className="bi bi-arrow-left" style={{ fontSize: "4rem" }}></i>
         </button>
 
-        <h5 className="card-title text-center mt-3 mb-4">Cadastrar</h5>
+        <h5 className="card-title text-center mt-3 mb-4">{t("Cadastrar")}</h5>
 
         <form className="register-form" onSubmit={handleSubmit}>
           <div className="mb-3">
-            <label className="form-label">Nome Completo</label>
+            <label className="form-label">{t("Nome")}</label>
             <input
               type="text"
               className="form-control"
@@ -65,7 +67,7 @@ const RegisterPage = () => {
           </div>
 
           <div className="mb-3">
-            <label className="form-label">Email</label>
+            <label className="form-label">{t("Email")}</label>
             <input
               type="email"
               className="form-control"
@@ -77,7 +79,7 @@ const RegisterPage = () => {
           </div>
 
           <div className="mb-3">
-            <label className="form-label">Senha</label>
+            <label className="form-label">{t("Senha")}</label>
             <input
               type="password"
               className="form-control"
@@ -89,7 +91,7 @@ const RegisterPage = () => {
           </div>
 
           <div className="mb-4">
-            <label className="form-label">Confirmar Senha</label>
+            <label className="form-label">{t("ConfirmarSenha")}</label>
             <input
               type="password"
               className="form-control"
@@ -106,7 +108,7 @@ const RegisterPage = () => {
               className="btn btn-dark px-5 rounded-pill register-submit"
               onClick={() => navigate("/")}
             >
-              Cadastrar
+              {t("Cadastrar")}
             </button>
           </div>
         </form>
