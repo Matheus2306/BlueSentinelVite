@@ -81,7 +81,7 @@ const Dashboard = () => {
           </div>
           <div className="text-center">
             <h4>{t("QuantidadeEmAtiva")}</h4>
-            <h1 className="fw-bold">27</h1>
+            <h1 className="fw-bold">7</h1>
           </div>
           <div className="map-box">
             <MapContainer

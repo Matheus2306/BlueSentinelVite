@@ -1,4 +1,4 @@
-// ...existing code...
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import { toggleTheme } from "../theme";
 import LogoHeader from "../img/logoHeader.png";
@@ -7,6 +7,40 @@ import { useTranslation } from "react-i18next";
 const Header = () => {
   const navigate = useNavigate();
   const { t } = useTranslation();
+
+  // Track theme mode locally so we can switch the icon when theme changes
+  const [mode, setMode] = useState(() => {
+    try {
+      return localStorage.getItem("themeMode") || "sistema";
+    } catch {
+      return "sistema";
+    }
+  });
+
+  useEffect(() => {
+    // Keep in sync with other tabs/windows that may change theme
+    const onStorage = (e) => {
+      if (e.key === "themeMode") {
+        setMode(e.newValue || "sistema");
+      }
+    };
+    window.addEventListener("storage", onStorage);
+    return () => window.removeEventListener("storage", onStorage);
+  }, []);
+
+  const handleToggle = () => {
+    // toggleTheme updates localStorage synchronously; read new value and update state
+    toggleTheme();
+    try {
+      const m = localStorage.getItem("themeMode") || "sistema";
+      setMode(m);
+    } catch {
+      setMode((prev) => (prev === "claro" ? "escuro" : "claro"));
+    }
+  };
+
+  const themeIconClass =
+    mode === "claro" ? "bi bi-brightness-high-fill" : "bi bi-moon-fill";
 
   return (
     <header id="header">
@@ -50,23 +84,24 @@ const Header = () => {
           ></i>
         </button>
 
-        <button className="icon-btn" aria-label={t("Settings")}>
+        <button
+          className="icon-btn"
+          aria-label={t("Settings")}
+          onClick={() => navigate("/settings")}
+        >
           <i
             id="settingsIcon"
             className="bi bi-gear-fill"
             aria-hidden="true"
-            onClick={() => navigate("/settings")}
           ></i>
         </button>
 
         <button
           className="icon-btn"
           aria-label={t("ToggleDarkMode")}
-          onClick={() => {
-            toggleTheme();
-          }}
+          onClick={handleToggle}
         >
-          <i id="moonIcon" className="bi bi-moon-fill" aria-hidden="true"></i>
+          <i id="moonIcon" className={themeIconClass} aria-hidden="true"></i>
         </button>
       </nav>
     </header>
@@ -74,4 +109,3 @@ const Header = () => {
 };
 
 export default Header;
-// ...existing code...
