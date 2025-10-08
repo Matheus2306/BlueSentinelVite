@@ -1,6 +1,4 @@
-* {
-  box-sizing: border-box;
-}
+/* global reset intentionally left blank */
 
 /* Body background fallback color (used behind the hero image) */
 html,
@@ -12,9 +10,24 @@ body {
 
 /* Use Source Serif 4 loaded from index.html; fall back to generic serif */
 /* Use Source Serif 4 loaded from index.html; fall back to generic serif */
+:root {
+  --bg: linear-gradient(
+    180deg,
+    #1c1264 0%,
+    #381d89 57%,
+    #3a1789 79%,
+    #391f80 100%
+  );
+  --text-color: #ffffff;
+  --primary-color: #4a0ce0;
+  --header-bg: rgba(10, 10, 10, 0.35);
+  --icon-color: #ffffff;
+}
+
 body {
   font-family: "Source Serif 4", Georgia, "Times New Roman", serif;
-  color: #fff;
+  color: var(--text-color, #fff);
+  background: var(--bg, linear-gradient(180deg, #1c1264 0%, #381d89 100%)) fixed;
 }
 
 /* HERO / BACKGROUND IMAGE CONTAINER */
@@ -131,11 +144,6 @@ h1.brand {
   left: 0;
   right: 0;
   height: 64px;
-  background: linear-gradient(
-    90deg,
-    rgba(10, 10, 10, 0.35),
-    rgba(10, 10, 10, 0.15)
-  );
   padding: 0 1rem;
   display: flex;
   align-items: center;
@@ -143,6 +151,32 @@ h1.brand {
   z-index: 1000;
   backdrop-filter: blur(6px);
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.35);
+}
+
+/* Posiciona o botão Home no canto superior direito da página */
+#homeBtn {
+  position: fixed;
+  top: 12px;
+  right: 12px;
+  z-index: 1100; /* acima do header e imagens */
+  width: 56px;
+  height: 56px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+  background: rgba(0, 0, 0, 0.45);
+  color: var(--text-color, #fff);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.45);
+}
+
+@media (max-width: 640px) {
+  #homeBtn {
+    width: 44px;
+    height: 44px;
+    top: 8px;
+    right: 8px;
+  }
 }
 
 #videoIcon,
@@ -153,7 +187,7 @@ h1.brand {
   width: 32px;
   height: 32px;
   font-size: 1.75rem; /* ensure icon font scales */
-  color: #fff;
+  color: var(--icon-color, #fff);
   cursor: pointer;
   display: inline-flex;
   align-items: center;
@@ -165,7 +199,7 @@ h1.brand {
 .icon-btn {
   background: rgba(255, 255, 255, 0.06);
   border: none;
-  color: #fff;
+  color: var(--text-color, #fff);
   padding: 6px;
   border-radius: 8px;
   display: inline-flex;
@@ -198,7 +232,7 @@ h1.brand {
 #page-content h1,
 #page-content h2,
 #page-content p {
-  color: #fff;
+  color: var(--text-color, #fff);
   text-shadow: 0 2px 8px rgba(0, 0, 0, 0.7);
 }
 
@@ -222,8 +256,7 @@ h1.brand {
 
 /* Purple info band below the hero to match the screenshot */
 #info-section {
-  background: #3b156f; /* deep purple */
-  color: #fff;
+  color: var(--text-color, #fff);
   padding: 3.5rem 1rem;
 }
 
@@ -247,8 +280,7 @@ h1.brand {
 
 /* Drone description band (similar to #info-section but slightly darker) */
 #drone-section {
-  background: linear-gradient(180deg, #321055 0%, #2b0f47 100%);
-  color: #fff;
+  color: var(--text-color, #fff);
   padding: 3rem 1rem;
 }
 
@@ -266,10 +298,10 @@ h1.brand {
 }
 #card-selection {
   background-color: #413b6b;
-  color: #fff;
-  width: 600px;
+  color: var(--text-color, #fff);
+  width: 623px;
   max-width: calc(100% - 2rem);
-  height: 260px;
+  height: 1041px;
   margin: 2.5rem auto; /* centers horizontally and adds vertical spacing */
   display: flex;
   flex-direction: column;
@@ -280,6 +312,15 @@ h1.brand {
   gap: 0.5rem;
   border-radius: 12px;
   box-shadow: 0 8px 24px rgba(17, 15, 40, 0.45);
+}
+#card-selection h2 {
+  font-size: 48px;
+  margin-bottom: 1rem;
+  font-weight: bold;
+}
+#card-selection p {
+  font-size: 32px;
+  margin-bottom: 1rem;
 }
 
 /* Slightly reduce size on small screens */
@@ -292,14 +333,11 @@ h1.brand {
 
 /* Registration page styles (screenshot match) */
 .register-page {
-  width: 100%;
-  min-height: calc(100vh - 64px);
-  padding: 3rem 1rem;
-  background: linear-gradient(180deg, #2b0f47 0%, #3b156f 60%);
+  padding: 241px;
 }
 
 .register-card {
-  width: 480px;
+  width: 640px;
   max-width: calc(100% - 2rem);
   background: rgba(30, 14, 39, 0.55);
   border-radius: 16px;
@@ -308,10 +346,17 @@ h1.brand {
   backdrop-filter: blur(6px) saturate(1.05);
   color: #eee;
   pointer-events: auto;
+  min-height: 520px; /* allow flexible height */
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* center children horizontally */
+  justify-content: center; /* center children vertically */
+  text-align: center; /* ensure text is centered */
+  padding: 2rem 1.5rem; /* consistent padding */
 }
 
 .register-card .card-title {
-  color: #f2e9ff;
+  color: var(--text-color, #f2e9ff);
   font-weight: 600;
 }
 
@@ -321,6 +366,9 @@ h1.brand {
   transform: translateX(-50%);
   top: -42px;
   width: 84px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .logo-circle {
@@ -349,12 +397,23 @@ h1.brand {
   color: rgba(255, 255, 255, 0.9);
 }
 
+.register-form {
+  width: 100%;
+  max-width: 520px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  align-items: center;
+}
+
 .register-form .form-control {
   background: rgba(255, 255, 255, 0.12);
-  border: none;
-  color: #fff;
+  color: var(--text-color, #fff);
   padding: 12px 18px;
-  height: 44px;
+  height: 108.53px;
+  width: 453.27px;
+  border-radius: 15px;
+  border: none;
 }
 
 .register-form .form-label {
@@ -370,7 +429,7 @@ h1.brand {
 .register-submit {
   background: linear-gradient(180deg, #2b0f47, #3b156f);
   border: none;
-  color: #fff;
+  color: var(--text-color, #fff);
   box-shadow: 0 6px 16px rgba(20, 8, 50, 0.5);
 }
 
@@ -387,4 +446,306 @@ h1.brand {
     width: 72px;
     height: 72px;
   }
+}
+#subsection {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1.5rem;
+  margin-top: 2rem;
+}
+#card-selection-2 {
+  background-color: #413b6b;
+  width: 1334px;
+  max-width: calc(100% - 2rem);
+  height: auto;
+  margin: 2.5rem auto; /* centers horizontally and adds vertical spacing */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 1.5rem 1.25rem;
+  gap: 0.5rem;
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(17, 15, 40, 0.45);
+}
+#card-selection-2 p {
+  font-size: 40px;
+  margin-bottom: 1rem;
+}
+#card-selection-2 h2 {
+  font-size: 32px;
+  margin-bottom: 1rem;
+  font-weight: bold;
+}
+#last-card {
+  background-color: #413b6b;
+  width: 1124px;
+  max-width: calc(100% - 2rem);
+  height: 453;
+  margin: 2.5rem auto; /* centers horizontally and adds vertical spacing */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 1.5rem 1.25rem;
+  gap: 0.5rem;
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(17, 15, 40, 0.45);
+}
+#last-card p {
+  font-size: 64px;
+  margin-bottom: 1rem;
+}
+#last-card-button {
+  background-color: #1c0b2b;
+  width: 352px;
+  height: 113px;
+  border-radius: 100px;
+  font-size: 48px;
+  color: #ffffff;
+}
+#card-register {
+  width: 640px;
+  height: 928.88px;
+}
+/* Fundo geral */
+.profile-edit-container {
+  height: 100vh;
+  width: 100%;
+  background: linear-gradient(180deg, #190537 0%, #341a7a 100%);
+}
+
+/* Card principal */
+.profile-card {
+  background-color: rgba(20, 10, 45, 0.85);
+  width: 350px;
+  border-radius: 15px;
+  box-shadow: 0px 6px 18px rgba(0, 0, 0, 0.4);
+}
+
+/* Ícone circular */
+.profile-icon {
+  background-color: #341a7a;
+  border-radius: 50%;
+  width: 80px;
+  height: 80px;
+  position: absolute;
+  top: -40px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+/* Título */
+.title {
+  color: var(--text-color, #fff);
+  font-weight: 500;
+  letter-spacing: 0.5px;
+}
+
+/* Inputs customizados */
+.input-custom {
+  background-color: #cfc6f2 !important;
+  border: none !important;
+  border-radius: 8px;
+  color: #000;
+  font-size: 0.95rem;
+  padding: 10px;
+}
+
+.input-custom:focus {
+  box-shadow: 0 0 0 0.2rem rgba(111, 66, 193, 0.4);
+}
+
+/* Botão customizado */
+.btn-custom {
+  background-color: #2d0e59;
+  color: var(--text-color, #fff);
+  border-radius: 10px;
+  font-size: 0.95rem;
+  padding: 10px;
+  border: none;
+  transition: 0.3s;
+}
+
+.btn-custom:hover {
+  background-color: #441a8d;
+  transform: scale(1.03);
+}
+
+/* Responsivo */
+@media (max-width: 400px) {
+  .profile-card {
+    width: 90%;
+    padding: 1.5rem;
+  }
+
+  .profile-icon {
+    width: 70px;
+    height: 70px;
+    top: -35px;
+  }
+
+  .title {
+    font-size: 1.1rem;
+  }
+}
+/* Make the camera view fill the entire viewport and ensure the image covers it */
+#camView {
+  height: 100vh;
+  width: 100vw;
+  margin: 0;
+  padding: 0;
+  display: block;
+  overflow: hidden; /* hide any overflow when aspect ratios differ */
+}
+
+#camView img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* scale and crop to fill without distortion */
+  display: block;
+}
+
+/* Container for camera view to allow absolutely positioned controls */
+.cam-container {
+  position: relative; /* parent for absolute positioned icon */
+  width: 100%;
+  height: 100%;
+}
+
+/* Back icon placed over the image in the top-left corner */
+.cam-back-btn {
+  position: absolute;
+  top: 12px; /* small inset from top */
+  left: 12px; /* small inset from left */
+  z-index: 1001; /* above the hero overlay */
+  pointer-events: auto; /* ensure button is clickable */
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 56px;
+  height: 56px;
+  border-radius: 10px;
+  background: rgba(0, 0, 0, 0.45);
+  color: var(--text-color, #fff);
+  border: none;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.45);
+}
+
+.cam-back-btn i {
+  font-size: 1.5rem;
+}
+
+@media (max-width: 640px) {
+  .cam-back-btn {
+    width: 44px;
+    height: 44px;
+    top: 8px;
+    left: 8px;
+  }
+  .cam-back-btn i {
+    font-size: 1.15rem;
+  }
+}
+.settings-page {
+  height: 100vh;
+  width: 100%;
+  background: linear-gradient(180deg, #1a0066, #3a0ca3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: "Source Serif 4", Georgia, "Times New Roman", serif;
+  color: var(--text-color, #fff);
+}
+
+.settings-card {
+  background-color: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(10px);
+  width: 600px;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.4);
+  border-radius: 10px;
+}
+
+.settings-icon {
+  background-color: #1a0033;
+  border-radius: 50%;
+  width: 60px;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 15px;
+  font-size: 1.8rem;
+}
+
+.btn-primary {
+  background-color: var(--primary-color, #4a0ce0) !important;
+  border: none;
+}
+
+.btn-secondary {
+  background-color: rgba(255, 255, 255, 0.25) !important;
+  border: none;
+}
+
+h4,
+h5 {
+  color: var(--text-color, #fff);
+}
+.dashboard-page {
+  min-height: 100vh;
+  background: linear-gradient(180deg, #1a0066, #3a0ca3);
+  color: #fff;
+  padding: 30px;
+}
+
+.top-info h1 {
+  font-size: 3rem;
+}
+
+.map-box {
+  width: min(1100px, 48%);
+  min-width: 520px;
+  height: 420px;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.45);
+}
+
+.map {
+  width: 100%;
+  height: 100%;
+  border-radius: 10px;
+}
+
+@media (max-width: 900px) {
+  .map-box,
+  .chart-box {
+    width: 100%;
+    min-width: unset;
+  }
+  .map-box {
+    height: 360px;
+  }
+}
+
+.charts-container {
+  display: flex;
+  justify-content: center;
+  gap: 40px;
+  margin-top: 50px;
+  flex-wrap: wrap;
+}
+
+.chart-box {
+  background-color: rgba(255, 255, 255, 0.06);
+  border-radius: 15px;
+  padding: 28px;
+  backdrop-filter: blur(6px);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.45);
+  width: min(1100px, 48%);
+  min-width: 520px;
 }
