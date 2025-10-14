@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router";
+import { useNavigate, useLocation } from "react-router";
 import { toggleTheme } from "../theme";
 import LogoHeader from "../img/logoHeader.png";
 import { useTranslation } from "react-i18next";
 
 const Header = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const { t } = useTranslation();
 
   // Track theme mode locally so we can switch the icon when theme changes
@@ -46,6 +47,16 @@ const Header = () => {
     <header id="header">
       <img src={LogoHeader} alt={t("Home")} id="logo" />
       <nav className="header-icons" aria-label="User actions">
+        {/* Show a Home icon on every page except the site root */}
+        {location && location.pathname !== "/" && (
+          <button
+            className="icon-btn"
+            aria-label="Home"
+            onClick={() => navigate("/")}
+          >
+            <i className="bi bi-house-fill" aria-hidden="true"></i>
+          </button>
+        )}
         <button className="icon-btn" aria-label="Video">
           <i
             id="videoIcon"
@@ -102,6 +113,14 @@ const Header = () => {
           onClick={handleToggle}
         >
           <i id="moonIcon" className={themeIconClass} aria-hidden="true"></i>
+        </button>
+
+        <button
+          className="icon-btn"
+          aria-label={t("About")}
+          onClick={() => navigate("/about")}
+        >
+          <i className="bi bi-lightbulb-fill" aria-hidden="true"></i>
         </button>
       </nav>
     </header>

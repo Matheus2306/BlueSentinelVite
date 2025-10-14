@@ -13,6 +13,7 @@ import Dashboard from "./pages/Dashboard.jsx";
 import { BrowserRouter, Route, Routes } from "react-router";
 
 import "./i18n"; // importa a config
+import About from "./pages/About.jsx";
 // initialize theme variables from localStorage before first render
 initTheme();
 
@@ -26,6 +27,7 @@ createRoot(document.getElementById("root")).render(
         <Route path="/cam" element={<CamView />} />
         <Route path="/settings" element={<SettingsPage />} />
         <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/about" element={<About />} />
       </Routes>
     </BrowserRouter>
   </StrictMode>

@@ -751,3 +751,50 @@ h5 {
   width: min(1100px, 48%);
   min-width: 520px;
 }
+.about-page {
+  /* Use theme-provided background so pages respond to theme.js changes */
+  background: var(--bg, linear-gradient(to bottom, #1a0063, #2e0b8a, #3d0fa5))
+    fixed;
+  color: var(--text-color, #ffffff);
+  min-height: 100vh;
+}
+
+.hero-section {
+  animation: fadeIn 1.5s ease-in-out;
+}
+
+.bg-gradient-dark {
+  background: rgba(0, 0, 0, 0.15);
+  backdrop-filter: blur(10px);
+}
+
+.timeline {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.timeline-item {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  border-left: 3px solid #ffffff33;
+  padding-left: 1rem;
+  transition: transform 0.3s ease, color 0.3s;
+}
+
+.timeline-item:hover {
+  transform: translateX(10px);
+  color: #c9a2ff;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

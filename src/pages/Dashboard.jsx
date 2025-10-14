@@ -14,8 +14,6 @@ import {
 import { MapContainer, TileLayer, CircleMarker, Popup } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import Header from "../components/Header";
-import { useTranslation } from "react-i18next";
-import { useNavigate } from "react-router";
 
 const Dashboard = () => {
   const [timer, setTimer] = useState("00:00:00");
@@ -57,30 +55,18 @@ const Dashboard = () => {
     [-23.685, -46.075],
   ];
 
-  const navigate = useNavigate();
-  const { t } = useTranslation();
 
   return (
     <>
-      <header>
-        <button
-          id="homeBtn"
-          className="icon-btn fs-1"
-          title="Home"
-          type="button"
-          onClick={() => navigate("/")}
-        >
-          <i className="bi bi-house-fill"></i>
-        </button>
-      </header>
+      <Header />
       <div className="dashboard-page">
         <div className="top-info d-flex justify-content-around align-items-center">
           <div className="text-center">
-            <h4>{t("TempoDeAtividade")}</h4>
+            <h4>{("TempoDeAtividade")}</h4>
             <h1 className="fw-bold">{timer}</h1>
           </div>
           <div className="text-center">
-            <h4>{t("QuantidadeEmAtiva")}</h4>
+            <h4>{("QuantidadeEmAtiva")}</h4>
             <h1 className="fw-bold">7</h1>
           </div>
           <div className="map-box">
