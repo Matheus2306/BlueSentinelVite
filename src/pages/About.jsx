@@ -21,8 +21,8 @@ const About = () => {
           <div className="container">
             <h1 className="display-4 fw-bold mb-3 p-4">Sobre Nós</h1>
             <p className="lead mx-auto w-75">
-              Acreditamos em código limpo, design bonito e propósito real.
-              Desenvolvemos soluções digitais com performance, estilo e alma.
+              acreditamos que o meio ambiente não precisa sofrer com a poluição,
+              por isso criamos o Blue Sentinel
             </p>
           </div>
         </section>
@@ -33,9 +33,10 @@ const About = () => {
             <h2 className="text-center mb-4 ">Quem Somos</h2>
             <p className="text-center mx-auto w-75">
               Somos um grupo de apaixonados por tecnologia que acredita que o
-              futuro da web é rápido, bonito e acessível. Nosso objetivo é criar
-              experiências digitais que conectem pessoas e ideias de forma
-              autêntica e inovadora.
+              futuro da web é rápido, bonito e acessível. Nosso objetivo é a
+              coleta de lixo vizando principalmente no cuidado ao meio ambiente,
+              usando de um submarino com braços roboticos feito de componentes
+              reciclados para a coleta de lixo de rios.
             </p>
           </div>
         </section>
@@ -70,7 +71,8 @@ const About = () => {
                 <div>
                   <h5>Futuro</h5>
                   <p>
-                    Expandir a comunidade e inspirar novos criadores digitais.
+                    Expandir de rios para oceanos e mares para aumentar a
+                    sustentabilidade e diminuir a poluição nas águas.
                   </p>
                 </div>
               </div>
@@ -86,12 +88,12 @@ const About = () => {
               <div className="col-md-3" data-aos="fade-up" data-aos-delay="100">
                 <i className="bi bi-code-slash display-5 mb-3"></i>
                 <h5>Front-End</h5>
-                <p>Interfaces modernas, responsivas e rápidas.</p>
+                <p>Visualização dinâmica de dados do usuário cadastrado</p>
               </div>
               <div className="col-md-3" data-aos="fade-up" data-aos-delay="200">
                 <i className="bi bi-palette-fill display-5 mb-3"></i>
                 <h5>Design</h5>
-                <p>UX/UI que entrega experiências incríveis.</p>
+                <p>UX/UI que entrega experiências incríveis tanto mobile quanto para desktop.</p>
               </div>
               <div className="col-md-3" data-aos="fade-up" data-aos-delay="300">
                 <i className="bi bi-plug-fill display-5 mb-3"></i>
@@ -123,6 +125,11 @@ const About = () => {
               </span>
               <span className="badge bg-light text-dark p-3 fs-6">
                 Comunidade
+              </span><span className="badge bg-light text-dark p-3 fs-6">
+                Sustentabilidade
+              </span>
+              <span className="badge bg-light text-dark p-3 fs-6">
+                Meio Ambiente
               </span>
             </div>
           </div>
