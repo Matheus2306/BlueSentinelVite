@@ -132,10 +132,7 @@ const SettingsPage = () => {
 
           <div className="mb-3">
             <label className="fw-semibold me-3">{t("LeituraDeTela")}</label>
-            <div
-              className="form-check form-switch d-inline-block"
-              style={{ transform: "scale(1.3)" }}
-            >
+            <div className="form-check form-switch d-inline-block fs-4 p-1">
               <input
                 className="form-check-input"
                 type="checkbox"

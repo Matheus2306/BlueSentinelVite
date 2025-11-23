@@ -10,8 +10,11 @@ const RegisterPage = () => {
     nome: "",
     email: "",
     senha: "",
-    confirmar: "",
+    nascimento: "",
   });
+  const [loading, setLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState(null);
+  const [successMessage, setSuccessMessage] = useState(null);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -20,20 +23,61 @@ const RegisterPage = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Simple client-side "registration": create a fake id and store it along with form data
-    const id = `user_${Date.now()}`;
-    const userData = { id, nome: form.nome, email: form.email };
-    localStorage.setItem("userId", id);
-    localStorage.setItem("userData", JSON.stringify(userData));
-    // After "registering" go to LoginPage
-    navigate("/login");
+    setErrorMessage(null);
+    setSuccessMessage(null);
+    const doRegister = async () => {
+      setLoading(true);
+      try {
+        const payload = {
+          email: form.email,
+          password: form.senha,
+          nome: form.nome,
+          nascimento: form.nascimento
+            ? new Date(form.nascimento).toISOString()
+            : new Date().toISOString(),
+        };
+
+        const res = await fetch("https://BlueSentinal.somee.com/Usuario/registrar", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Accept: "*/*",
+          },
+          body: JSON.stringify(payload),
+        });
+
+        if (!res.ok) {
+          // try read json or text for a helpful message
+          let msg = `Erro ${res.status}`;
+          try {
+            const data = await res.json();
+            msg = data?.message || JSON.stringify(data) || msg;
+          } catch {
+            const txt = await res.text();
+            if (txt) msg = txt;
+          }
+          throw new Error(msg);
+        }
+
+        // success
+        setSuccessMessage("Cadastro realizado com sucesso.");
+        // navigate after short delay so user can see message
+        setTimeout(() => navigate("/"), 700);
+      } catch (err) {
+        setErrorMessage(err?.message || String(err));
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    doRegister();
   };
 
   return (
-    <div className="register-page d-flex align-items-center justify-content-center">
+    <div className="d-flex flex-column gap-3 vh-100 align-items-center justify-content-center">
       <div
         id="card-register"
-        className="register-card position-relative text-center p-4"
+        className="register-card w-25 h-75 text-center p-4"
       >
         {/* top circular logo */}
         <div className="top-logo d-flex justify-content-center">
@@ -41,24 +85,29 @@ const RegisterPage = () => {
             <img src={logoHeader} alt="logo" />
           </div>
         </div>
+        <div className="d-flex align-items-center ">
+          <button
+            type="button"
+            className="btn btn-link text-white back-btn"
+            onClick={() => navigate(-1)}
+            aria-label={t("Voltar")}
+          >
+            <i className="bi bi-arrow-left fs-4"></i>
+          </button>
+          <h5 className="card-title text-center mt-2 mb-1 mx-5">
+            {t("Cadastrar")}
+          </h5>
+        </div>
 
-        <button
-          type="button"
-          className="btn btn-link text-white position-absolute back-btn"
-          onClick={() => navigate(-1)}
-          aria-label={t("Voltar")}
+        <form
+          className="register-form d-flex flex-column gap-3 w-100 h-100 align-items-center"
+          onSubmit={handleSubmit}
         >
-          <i className="bi bi-arrow-left" style={{ fontSize: "4rem" }}></i>
-        </button>
-
-        <h5 className="card-title text-center mt-3 mb-4">{t("Cadastrar")}</h5>
-
-        <form className="register-form" onSubmit={handleSubmit}>
-          <div className="mb-3">
+          <div className="">
             <label className="form-label">{t("Nome")}</label>
             <input
               type="text"
-              className="form-control"
+              className="form-control w-100"
               name="nome"
               value={form.nome}
               onChange={handleChange}
@@ -66,11 +115,11 @@ const RegisterPage = () => {
             />
           </div>
 
-          <div className="mb-3">
+          <div className="">
             <label className="form-label">{t("Email")}</label>
             <input
               type="email"
-              className="form-control"
+              className="form-control w-100"
               name="email"
               value={form.email}
               onChange={handleChange}
@@ -78,11 +127,11 @@ const RegisterPage = () => {
             />
           </div>
 
-          <div className="mb-3">
+          <div className="">
             <label className="form-label">{t("Senha")}</label>
             <input
               type="password"
-              className="form-control"
+              className="form-control w-100"
               name="senha"
               value={form.senha}
               onChange={handleChange}
@@ -90,29 +139,36 @@ const RegisterPage = () => {
             />
           </div>
 
-          <div className="mb-4">
-            <label className="form-label">{t("ConfirmarSenha")}</label>
+          <div className="">
+            <label className="form-label">{t("Nascimento")}</label>
             <input
-              type="password"
-              className="form-control"
-              name="confirmar"
-              value={form.confirmar}
+              type="date"
+              className="form-control w-100"
+              name="nascimento"
+              value={form.nascimento}
               onChange={handleChange}
-              placeholder="••••••••"
             />
           </div>
 
-          <div className="d-flex justify-content-center">
+          {errorMessage && <div className="text-danger">{errorMessage}</div>}
+          {successMessage && (
+            <div className="text-success">{successMessage}</div>
+          )}
+
+          <div className="d-flex justify-content-center mt-2">
             <button
               type="submit"
               className="btn btn-dark px-5 rounded-pill register-submit"
-              onClick={() => navigate("/")}
+              disabled={loading}
             >
-              {t("Cadastrar")}
+              {loading ? t("Cadastrando...") : t("Cadastrar")}
             </button>
           </div>
         </form>
       </div>
+      <span className="text-info text-decoration-underline" role="button" onClick={() => navigate("/login")}>
+        {t("já possui uma conta?")}
+      </span>
     </div>
   );
 };
