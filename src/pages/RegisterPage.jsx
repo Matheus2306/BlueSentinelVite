@@ -37,7 +37,7 @@ const RegisterPage = () => {
             : new Date().toISOString(),
         };
 
-        const res = await fetch("https://BlueSentinal.somee.com/Usuario/registrar", {
+        const res = await fetch("http://bluesentinal.somee.com/Usuario/registrar", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -62,7 +62,7 @@ const RegisterPage = () => {
         // success
         setSuccessMessage("Cadastro realizado com sucesso.");
         // navigate after short delay so user can see message
-        setTimeout(() => navigate("/"), 700);
+        setTimeout(() => navigate("/login"), 700);
       } catch (err) {
         setErrorMessage(err?.message || String(err));
       } finally {

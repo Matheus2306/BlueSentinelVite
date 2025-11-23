@@ -3,11 +3,54 @@ import { useNavigate, useLocation } from "react-router";
 import { toggleTheme } from "../theme";
 import LogoHeader from "../img/logoHeader.png";
 import { useTranslation } from "react-i18next";
+import { token } from "../js/TokenContext";
 
 const Header = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { t } = useTranslation();
+  const [user, setUser] = useState(null);
+  const [loadingUser, setLoadingUser] = useState(false);
+  const [userError, setUserError] = useState(null);
+
+  useEffect(() => {
+    if (!token) {
+      setUser(null);
+      return;
+    }
+
+    const ac = new AbortController();
+    const fetchUser = async () => {
+      setUserError(null);
+      setLoadingUser(true);
+      try {
+        const res = await fetch("http://bluesentinal.somee.com/Usuarios/me", {
+          method: "GET",
+          headers: {
+            Authorization: `${token}`,
+            "Content-Type": "application/json",
+          },
+        });
+        if (!res.ok) {
+          // treat as no user / unauthenticated
+          setUser(null);
+        } else {
+          const data = await res.json();
+          setUser(data);
+        }
+      } catch (err) {
+        if (err.name !== "AbortError") {
+          setUser(null);
+          setUserError(err);
+        }
+      } finally {
+        setLoadingUser(false);
+      }
+    };
+
+    fetchUser();
+    return () => ac.abort();
+  }, [token]);
 
   // Track theme mode locally so we can switch the icon when theme changes
   const [mode, setMode] = useState(() => {
@@ -17,6 +60,7 @@ const Header = () => {
       return "sistema";
     }
   });
+
 
   useEffect(() => {
     // Keep in sync with other tabs/windows that may change theme
@@ -75,25 +119,57 @@ const Header = () => {
         </button>
 
         {/* Make this a button for accessibility and put navigate inside the component */}
-        <button
-          className="icon-btn"
-          aria-label="Profile"
-          onClick={() => {
-            // If there's a stored user id, go to the login page; otherwise go to register
-            const userId = localStorage.getItem("userId");
-            if (userId) {
-              navigate("/login");
-            } else {
+        {token ? (
+          <div className="user-info">
+            {loadingUser ? (
+              <span>Carregando...</span>
+            ) : user ? (
+              <>
+                <span>{user.nome}</span>
+                <button
+                  className="icon-btn"
+                  aria-label="Logout"
+                  onClick={() => {
+                    // call logout from context and navigate to login page
+                    try {
+                      logout();
+                    } finally {
+                      navigate("/login");
+                    }
+                  }}
+                >
+                  <i className="bi bi-box-arrow-right" aria-hidden="true"></i>
+                </button>
+              </>
+            ) : (
+              <button
+                className="icon-btn"
+                aria-label="Profile"
+                onClick={() => navigate("/login")}
+              >
+                <i
+                  id="personIcon"
+                  className="bi bi-person-fill"
+                  aria-hidden="true"
+                ></i>
+              </button>
+            )}
+          </div>
+        ) : (
+          <button
+            className="icon-btn"
+            aria-label="Profile"
+            onClick={() => {
               navigate("/register");
-            }
-          }}
-        >
-          <i
-            id="personIcon"
-            className="bi bi-person-fill"
-            aria-hidden="true"
-          ></i>
-        </button>
+            }}
+          >
+            <i
+              id="personIcon"
+              className="bi bi-person-fill"
+              aria-hidden="true"
+            ></i>
+          </button>
+        )}
 
         <button
           className="icon-btn"

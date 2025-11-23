@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router";
 import { useTranslation } from "react-i18next";
+import { setToken } from "../js/TokenContext";
 
 const LoginPage = () => {
   const [formData, setFormData] = useState({
@@ -26,7 +27,7 @@ const LoginPage = () => {
 
     try {
       setLoading(true);
-      const res = await fetch("https://BlueSentinal.somee.com/Usuario/login", {
+      const res = await fetch("http://bluesentinal.somee.com/Usuario/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -48,23 +49,12 @@ const LoginPage = () => {
         throw new Error(msg);
       }
 
-      // success
-      let data = null;
-      try {
-        data = await res.json();
-      } catch {
-        data = null;
-      }
+      const data = await res.json();
+      setToken(data.accessToken); // store token globally
       setSuccessMessage("Login realizado com sucesso.");
       // optionally store token if backend returns one
-      if (data?.token) {
-        try {
-          localStorage.setItem("token", data.token);
-        } catch {
-          // ignore storage errors (private mode, quota, etc.)
-          console.warn("Could not persist token to localStorage");
-        }
-      }
+      console.log(data);
+
       navigate("/");
     } catch (e) {
       console.error("Login failed", e);
