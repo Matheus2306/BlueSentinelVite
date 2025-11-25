@@ -798,3 +798,41 @@ h5 {
     transform: translateY(0);
   }
 }
+
+/* Modal-specific styles (drone creation) */
+.drone-modal {
+  /* use system default UI font for modal content */
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue",
+    Arial, sans-serif;
+  color: #0b1220; /* dark text for form inputs */
+}
+
+.modal-btn {
+  padding: 10px 16px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: transform 0.12s ease, box-shadow 0.12s ease, opacity 0.12s ease;
+  font-family: inherit; /* inherit modal font */
+}
+
+.modal-btn-primary {
+  background: #2563eb;
+  color: #fff;
+  border: none;
+}
+
+.modal-btn-secondary {
+  background: #fff;
+  color: #111827;
+  border: 1px solid #d1d5db;
+}
+
+.modal-btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 30px rgba(37, 99, 235, 0.14);
+}
+
+.modal-btn-secondary:hover {
+  box-shadow: 0 8px 20px rgba(17, 24, 39, 0.06);
+}
