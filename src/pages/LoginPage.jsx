@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router";
 import { useTranslation } from "react-i18next";
-import { setToken } from "../js/TokenContext";
+import { setToken } from "../js/Token";
 
 const LoginPage = () => {
   const [formData, setFormData] = useState({
@@ -50,11 +50,14 @@ const LoginPage = () => {
       }
 
       const data = await res.json();
-      setToken(data.accessToken); // store token globally
+      setToken({
+        tokenType: data.tokenType,
+        accessToken: data.accessToken,
+        expiresIn: data.expiresIn,
+        newRefreshToken: data.refreshToken,
+      }); // store token globally
       setSuccessMessage("Login realizado com sucesso.");
       // optionally store token if backend returns one
-      console.log(data);
-
       navigate("/");
     } catch (e) {
       console.error("Login failed", e);
