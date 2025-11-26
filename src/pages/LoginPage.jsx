@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router";
 import { useTranslation } from "react-i18next";
 import { setToken } from "../js/Token";
+import { BASE_URLLocal } from "../js/Urls";
 
 const LoginPage = () => {
   const [formData, setFormData] = useState({
@@ -27,7 +28,7 @@ const LoginPage = () => {
 
     try {
       setLoading(true);
-      const res = await fetch("http://bluesentinal.somee.com/Usuario/login", {
+      const res = await fetch(BASE_URLLocal + "/Usuario/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
