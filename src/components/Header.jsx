@@ -13,7 +13,7 @@ const Header = () => {
   const [user, setUser] = useState(null);
   const [loadingUser, setLoadingUser] = useState(false);
 
-  useEffect(() => {
+  useEffect(() => {  
     if (!token) {
       setUser(null);
       return;

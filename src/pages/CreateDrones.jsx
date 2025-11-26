@@ -1,6 +1,8 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Header from "../components/Header";
 import { Navigate } from "react-router";
+import { token } from "../js/Token";
+import { fetchUser } from "../js/user";
 
 const CreateDrones = () => {
   // --- Proteção Admin ---
@@ -10,6 +12,22 @@ const CreateDrones = () => {
   const [droneId, setDroneId] = useState("");
   const [model, setModel] = useState("");
   const [mac, setMac] = useState("");
+  const [role, setRole] = useState([]);
+  
+  useEffect(() => {  
+      if (!token) {
+        return;
+      }
+      // Fetch user info if token is set
+      try {
+        fetchUser().then((userData) => {
+            setRole(userData.roles);
+            console.log(role)
+        });
+      } catch (e) {
+        console.error("Failed to fetch user info", e);
+      } 
+    }, [token]);
 
   // Gerador de ID
   function generateId() {
@@ -35,6 +53,7 @@ const CreateDrones = () => {
 
   return (
     <>
+    {role.includes("Admin") && <Navigate to="/" replace={true} />}
       <Header />
 
       {/* Página */}
