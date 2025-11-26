@@ -11,6 +11,7 @@ import CamView from "./pages/CamView.jsx";
 import SettingsPage from "./pages/SettingsPage.jsx";
 import Dashboard from "./pages/Dashboard.jsx";
 import { BrowserRouter, Route, Routes } from "react-router";
+import CreateDrones from "./pages/CreateDrones.jsx";
 
 import "./i18n"; // importa a config
 import About from "./pages/About.jsx";
@@ -19,16 +20,17 @@ initTheme();
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<App />} />
-          <Route path="/register" element={<RegisterPage />} />
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/cam" element={<CamView />} />
-          <Route path="/settings" element={<SettingsPage />} />
-          <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/about" element={<About />} />
-        </Routes>
-      </BrowserRouter>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<App />} />
+        <Route path="/register" element={<RegisterPage />} />
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/cam" element={<CamView />} />
+        <Route path="/settings" element={<SettingsPage />} />
+        <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/about" element={<About />} />
+        <Route path="/create-drones" element={<CreateDrones />} />
+      </Routes>
+    </BrowserRouter>
   </StrictMode>
 );

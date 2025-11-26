@@ -4,7 +4,7 @@ import { toggleTheme } from "../theme";
 import LogoHeader from "../img/logoHeader.png";
 import { useTranslation } from "react-i18next";
 import { clearToken, token } from "../js/Token";
-import { BASE_URLLocal } from "../js/Urls";
+import { fetchUser } from "../js/user";
 
 const Header = () => {
   const navigate = useNavigate();
@@ -22,23 +22,10 @@ const Header = () => {
     try {
       setLoadingUser(true);
 
-      const fetchUser = async () => {
-        const response = await fetch(
-          BASE_URLLocal + "/api/Usuarios/me",
-          {
-            method: "GET",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: token,
-            },
-          }
-        );
-        if (response.ok) {
-          const data = await response.json();
-          setUser(data);
-        }
-      };
-      fetchUser();
+
+      fetchUser().then((data) => {
+        setUser(data);
+      });
     } catch (e) {
       console.error("Failed to fetch user info", e);
     } finally {
