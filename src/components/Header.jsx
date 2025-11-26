@@ -4,6 +4,7 @@ import { toggleTheme } from "../theme";
 import LogoHeader from "../img/logoHeader.png";
 import { useTranslation } from "react-i18next";
 import { clearToken, token } from "../js/Token";
+import { BASE_URLLocal } from "../js/Urls";
 
 const Header = () => {
   const navigate = useNavigate();
@@ -23,7 +24,7 @@ const Header = () => {
 
       const fetchUser = async () => {
         const response = await fetch(
-          "http://bluesentinal.somee.com/api/Usuarios/me",
+          BASE_URLLocal + "/api/Usuarios/me",
           {
             method: "GET",
             headers: {

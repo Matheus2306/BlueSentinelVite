@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router";
 import logoHeader from "../img/logoHeader.png";
 import { useTranslation } from "react-i18next";
+import { BASE_URLLocal } from "../js/Urls";
 
 const RegisterPage = () => {
   const navigate = useNavigate();
@@ -37,7 +38,7 @@ const RegisterPage = () => {
             : new Date().toISOString(),
         };
 
-        const res = await fetch("http://bluesentinal.somee.com/Usuario/registrar", {
+        const res = await fetch(BASE_URLLocal + "/Usuario/registrar", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
