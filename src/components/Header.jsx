@@ -3,11 +3,47 @@ import { useNavigate, useLocation } from "react-router";
 import { toggleTheme } from "../theme";
 import LogoHeader from "../img/logoHeader.png";
 import { useTranslation } from "react-i18next";
+import { clearToken, token } from "../js/Token";
 
 const Header = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { t } = useTranslation();
+  const [user, setUser] = useState(null);
+  const [loadingUser, setLoadingUser] = useState(false);
+
+  useEffect(() => {
+    if (!token) {
+      setUser(null);
+      return;
+    }
+    // Fetch user info if token is set
+    try {
+      setLoadingUser(true);
+
+      const fetchUser = async () => {
+        const response = await fetch(
+          "http://bluesentinal.somee.com/api/Usuarios/me",
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: token,
+            },
+          }
+        );
+        if (response.ok) {
+          const data = await response.json();
+          setUser(data);
+        }
+      };
+      fetchUser();
+    } catch (e) {
+      console.error("Failed to fetch user info", e);
+    } finally {
+      setLoadingUser(false);
+    }
+  }, [token]);
 
   // Track theme mode locally so we can switch the icon when theme changes
   const [mode, setMode] = useState(() => {
@@ -38,6 +74,11 @@ const Header = () => {
     } catch {
       setMode((prev) => (prev === "claro" ? "escuro" : "claro"));
     }
+  };
+
+  const handleLogout = () => {
+    clearToken();
+    setUser(null);
   };
 
   const themeIconClass =
@@ -75,25 +116,43 @@ const Header = () => {
         </button>
 
         {/* Make this a button for accessibility and put navigate inside the component */}
-        <button
-          className="icon-btn"
-          aria-label="Profile"
-          onClick={() => {
-            // If there's a stored user id, go to the login page; otherwise go to register
-            const userId = localStorage.getItem("userId");
-            if (userId) {
-              navigate("/login");
-            } else {
+        {token ? (
+          <div className="user-info">
+            {loadingUser ? (
+              <span>Carregando...</span>
+            ) : (
+              <>
+                <span>{user.nome}</span>
+                <button
+                  className="icon-btn"
+                  aria-label="Logout"
+                  onClick={() => {
+                    handleLogout();
+                  }}
+                >
+                  <i
+                    className="bi bi-box-arrow-right fs-4"
+                    aria-hidden="true"
+                  ></i>
+                </button>
+              </>
+            )}
+          </div>
+        ) : (
+          <button
+            className="icon-btn"
+            aria-label="Profile"
+            onClick={() => {
               navigate("/register");
-            }
-          }}
-        >
-          <i
-            id="personIcon"
-            className="bi bi-person-fill"
-            aria-hidden="true"
-          ></i>
-        </button>
+            }}
+          >
+            <i
+              id="personIcon"
+              className="bi bi-person-fill"
+              aria-hidden="true"
+            ></i>
+          </button>
+        )}
 
         <button
           className="icon-btn"

@@ -1,43 +1,74 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router";
 import { useTranslation } from "react-i18next";
+import { setToken } from "../js/Token";
 
 const LoginPage = () => {
   const [formData, setFormData] = useState({
-    nome: "",
     email: "",
     senha: "",
   });
+  const [loading, setLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState(null);
+  const [successMessage, setSuccessMessage] = useState(null);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    alert("Alterações salvas com sucesso!");
+
+    const payload = {
+      email: formData.email,
+      password: formData.senha,
+    };
+
+    try {
+      setLoading(true);
+      const res = await fetch("http://bluesentinal.somee.com/Usuario/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        body: JSON.stringify(payload),
+      });
+
+      if (!res.ok) {
+        // try to extract server message
+        let msg = `Erro ${res.status}`;
+        try {
+          const data = await res.json();
+          msg = data?.message || JSON.stringify(data) || msg;
+        } catch {
+          const txt = await res.text();
+          if (txt) msg = txt;
+        }
+        throw new Error(msg);
+      }
+
+      const data = await res.json();
+      setToken({
+        tokenType: data.tokenType,
+        accessToken: data.accessToken,
+        expiresIn: data.expiresIn,
+        newRefreshToken: data.refreshToken,
+      }); // store token globally
+      setSuccessMessage("Login realizado com sucesso.");
+      // optionally store token if backend returns one
+      navigate("/");
+    } catch (e) {
+      console.error("Login failed", e);
+      setErrorMessage(e?.message || String(e));
+    } finally {
+      setLoading(false);
+    }
   };
 
   const navigate = useNavigate();
   const { t } = useTranslation();
-
-  useEffect(() => {
-    try {
-      const stored = localStorage.getItem("userData");
-      if (stored) {
-        const parsed = JSON.parse(stored);
-        setFormData((f) => ({
-          ...f,
-          nome: parsed.nome || "",
-          email: parsed.email || "",
-        }));
-      }
-    } catch (err) {
-      // ignore malformed data
-      console.error("Failed to parse userData from localStorage", err);
-    }
-  }, []);
 
   return (
     <div className="profile-edit-container d-flex align-items-center justify-content-center">
@@ -46,19 +77,15 @@ const LoginPage = () => {
           <i className="bi bi-person-fill fs-1 text-white"></i>
         </div>
 
-        <h2 className="title mt-5 mb-4">{t("Alteracoes")}</h2>
+        <h2 className="title mt-5 mb-4">{t("Entrar")}</h2>
 
         <form onSubmit={handleSubmit} className="d-flex flex-column gap-3">
-          <div className="text-start">
-            <label className="form-label text-light">{t("Nome")}</label>
-            <input
-              type="text"
-              name="nome"
-              value={formData.nome}
-              onChange={handleChange}
-              className="form-control input-custom"
-            />
-          </div>
+          {errorMessage && (
+            <div className="alert alert-danger">{errorMessage}</div>
+          )}
+          {successMessage && (
+            <div className="alert alert-success">{successMessage}</div>
+          )}
 
           <div className="text-start">
             <label className="form-label text-light">{t("Email")}</label>
@@ -82,12 +109,11 @@ const LoginPage = () => {
             />
           </div>
 
-          <button
-            type="submit"
-            className="btn btn-custom mt-3"
-            onClick={() => navigate(-1)}
-          >
-            {t("SalvarAlteracoes")}
+          {loading && (
+            <div className="text-center text-light">{t("Carregando...")}</div>
+          )}
+          <button type="submit" className="btn btn-custom mt-3">
+            {t("Entrar")}
           </button>
         </form>
       </div>

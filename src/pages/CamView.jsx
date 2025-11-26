@@ -9,10 +9,7 @@ const CamView = () => {
   return (
     <>
       <div id="camView" className="d-flex justify-content-center">
-        <div
-          className="cam-container"
-          style={{ position: "relative", width: "100%", height: "100%" }}
-        >
+        <div className="cam-container position-relative w-100 h-100">
           <img src={image} alt="CamView" />
           {/* ícone sobreposto no canto superior esquerdo */}
           <button
