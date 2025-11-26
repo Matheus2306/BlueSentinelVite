@@ -3,8 +3,8 @@ import { useNavigate, useLocation } from "react-router";
 import { toggleTheme } from "../theme";
 import LogoHeader from "../img/logoHeader.png";
 import { useTranslation } from "react-i18next";
-import { clearToken, token } from "../js/Token";
 import { fetchUser } from "../js/user";
+import { useAuth } from "../context/AuthContext";
 
 const Header = () => {
   const navigate = useNavigate();
@@ -12,25 +12,32 @@ const Header = () => {
   const { t } = useTranslation();
   const [user, setUser] = useState(null);
   const [loadingUser, setLoadingUser] = useState(false);
+  const { token, logout, isAuthenticated } = useAuth();
 
-  useEffect(() => {  
+  useEffect(() => {
+    let cancelled = false;
     if (!token) {
       setUser(null);
       return;
     }
-    // Fetch user info if token is set
-    try {
+
+    const load = async () => {
       setLoadingUser(true);
+      try {
+        const data = await fetchUser(token);
+        if (!cancelled) setUser(data?.nome || data?.email || null);
+      } catch (err) {
+        console.error("Failed to fetch user info", err);
+        if (!cancelled) setUser(null);
+      } finally {
+        if (!cancelled) setLoadingUser(false);
+      }
+    };
 
-
-      fetchUser().then((userData) => {
-          setUser(userData.nome);
-        });
-    } catch (e) {
-      console.error("Failed to fetch user info", e);
-    } finally {
-      setLoadingUser(false);
-    }
+    load();
+    return () => {
+      cancelled = true;
+    };
   }, [token]);
 
   // Track theme mode locally so we can switch the icon when theme changes
@@ -65,7 +72,7 @@ const Header = () => {
   };
 
   const handleLogout = () => {
-    clearToken();
+    logout();
     setUser(null);
   };
 
@@ -104,7 +111,7 @@ const Header = () => {
         </button>
 
         {/* Make this a button for accessibility and put navigate inside the component */}
-        {token ? (
+        {isAuthenticated ? (
           <div className="user-info">
             {loadingUser ? (
               <span>Carregando...</span>

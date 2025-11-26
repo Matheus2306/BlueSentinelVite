@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router";
 import { useTranslation } from "react-i18next";
-import { setToken } from "../js/Token";
+import { useAuth } from "../context/AuthContext";
 import { BASE_URLLocal } from "../js/Urls";
 
 const LoginPage = () => {
@@ -12,6 +12,7 @@ const LoginPage = () => {
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState(null);
   const [successMessage, setSuccessMessage] = useState(null);
+  const { login } = useAuth();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -51,12 +52,13 @@ const LoginPage = () => {
       }
 
       const data = await res.json();
-      setToken({
+      // use auth context to persist token and update app (hook called at component top)
+      login({
         tokenType: data.tokenType,
         accessToken: data.accessToken,
         expiresIn: data.expiresIn,
         newRefreshToken: data.refreshToken,
-      }); // store token globally
+      });
       setSuccessMessage("Login realizado com sucesso.");
       // optionally store token if backend returns one
       navigate("/");
