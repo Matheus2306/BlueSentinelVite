@@ -1,38 +1,25 @@
 import React, { useState } from "react";
 import Header from "../components/Header";
+import { Navigate } from "react-router";
 
 const CreateDrones = () => {
+  // --- Proteção Admin ---
+
+
   const [isOpen, setIsOpen] = useState(false);
   const [droneId, setDroneId] = useState("");
   const [model, setModel] = useState("");
   const [mac, setMac] = useState("");
-  const [linked, setLinked] = useState(false);
 
-  // generators
+  // Gerador de ID
   function generateId() {
     return `DRN-${Date.now().toString(36).slice(-6).toUpperCase()}`;
   }
 
-  function generateMac() {
-    const bytes = Array.from({ length: 6 }, () =>
-      Math.floor(Math.random() * 256)
-    );
-    return bytes
-      .map((b) => b.toString(16).padStart(2, "0"))
-      .join(":")
-      .toUpperCase();
-  }
-
-  function generateModel() {
-    const models = ["X100", "X200", "Z10", "T1", "A7", "M50"];
-    return models[Math.floor(Math.random() * models.length)];
-  }
-
   function initNewDrone() {
     setDroneId(generateId());
-    setModel(generateModel());
-    setMac(generateMac());
-    setLinked(false);
+    setModel("");
+    setMac("");
   }
 
   function openModal() {
@@ -41,7 +28,7 @@ const CreateDrones = () => {
   }
 
   function handleSave() {
-    const payload = { id: droneId, model, mac, linked };
+    const payload = { id: droneId, model, mac, linked: false };
     console.log("Criar drone:", payload);
     setIsOpen(false);
   }
@@ -50,81 +37,83 @@ const CreateDrones = () => {
     <>
       <Header />
 
-      <div className={`create-drone-page ${isOpen ? "modal-open-custom" : ""}`}>
-        <div id="create-drone-card" className="card text-center p-4 bg-dark text-light">
-          <h2 style={{ margin: 0 }}>Cadastrar Drone</h2>
-          <p className="text-light">
-            Clique aqui para cadastrar um novo drone no sistema.
-          </p>
-          <div className="d-flex justify-content-center mt-3">
-            <button onClick={openModal} className="btn btn-primary">
-              Cadastrar Novo Drone
-            </button>
-          </div>
+      {/* Página */}
+      <div className={`container py-5 ${isOpen ? "modal-open-custom" : ""}`}>
+        <div className="card bg-dark text-light text-center p-4 shadow-lg">
+          <h2 className="mb-2">Cadastrar Drone</h2>
+          <p>Clique abaixo para cadastrar um novo drone no sistema.</p>
+          <button className="btn btn-primary mt-3" onClick={openModal}>
+            Cadastrar Novo Drone
+          </button>
         </div>
       </div>
 
+      {/* Modal */}
       {isOpen && (
         <>
           <div
-            className="modal-backdrop-custom"
+            className="modal-backdrop fade show"
             onClick={() => setIsOpen(false)}
-          />
-          <div className="modal-wrapper d-flex justify-content-center align-items-center">
-            <div
-              className="modal-content-custom drone-modal p-3 bg-dark text-light"
-              onClick={(e) => e.stopPropagation()}
-            >
-              <div className="d-flex justify-content-between align-items-center mb-2">
-                <h3 style={{ margin: 0 }}>Cadastrar Novo Drone</h3>
-                <button
-                  className="btn-close"
-                  aria-label="Fechar"
-                  onClick={() => setIsOpen(false)}
-                />
-              </div>
+          ></div>
 
-              <div className="row g-3">
+          <div className="modal d-block" tabIndex="-1">
+            <div className="modal-dialog modal-dialog-centered">
+              <div
+                className="modal-content bg-dark text-light"
+                onClick={(e) => e.stopPropagation()}
+              >
+                <div className="modal-header">
+                  <h5 className="modal-title">Cadastrar Novo Drone</h5>
+                  <button
+                    className="btn-close btn-close-white"
+                    onClick={() => setIsOpen(false)}
+                  ></button>
+                </div>
 
-                <div className="col-md-6">
-                  <label className="form-label">Modelo</label>
-                  <div className="d-flex gap-2">
+                <div className="modal-body">
+                  <div className="mb-3">
+                    <label className="form-label">ID do Drone (gerado)</label>
                     <input
                       type="text"
                       className="form-control"
+                      value={droneId}
+                      disabled
+                    />
+                  </div>
+
+                  <div className="mb-3">
+                    <label className="form-label">Modelo</label>
+                    <input
+                      type="text"
+                      className="form-control"
+                      placeholder="Ex: BS-X900"
                       value={model}
                       onChange={(e) => setModel(e.target.value)}
                     />
                   </div>
-                </div>
 
-                <div className="col-md-6">
-                  <label className="form-label">Endereço MAC</label>
-                  <div className="d-flex gap-2">
+                  <div className="mb-3">
+                    <label className="form-label">Endereço MAC</label>
                     <input
                       type="text"
                       className="form-control"
+                      placeholder="Ex: AA:BB:CC:DD:EE:FF"
                       value={mac}
                       onChange={(e) => setMac(e.target.value)}
+                      autoComplete="off"
                     />
-                    <button
-                      onClick={() => setMac(generateMac())}
-                      className="modal-btn modal-btn-secondary"
-                    >
-                      Gerar
-                    </button>
                   </div>
                 </div>
 
-                <div className="col-12 d-flex justify-content-center gap-3 mt-3">
+                <div className="modal-footer">
                   <button
-                    className="modal-btn modal-btn-secondary"
+                    className="btn btn-secondary"
                     onClick={() => setIsOpen(false)}
                   >
                     Cancelar
                   </button>
                   <button
-                    className="modal-btn modal-btn-primary"
+                    className="btn btn-primary"
                     onClick={handleSave}
                   >
                     Salvar
