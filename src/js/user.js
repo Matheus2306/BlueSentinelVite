@@ -1,8 +1,9 @@
 import { token } from "./Token";
+import { BASE_URLLocal } from "./Urls";
 
 export const fetchUser = async () => {
         const response = await fetch(
-          "http://bluesentinal.somee.com/api/Usuarios/me",
+          BASE_URLLocal + "/api/Usuarios/me",
           {
             method: "GET",
             headers: {
@@ -14,5 +15,6 @@ export const fetchUser = async () => {
         if (response.ok) {
           const data = await response.json();
           return data;
+          
         }
       };

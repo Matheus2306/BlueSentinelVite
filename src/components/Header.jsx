@@ -23,9 +23,9 @@ const Header = () => {
       setLoadingUser(true);
 
 
-      fetchUser().then((data) => {
-        setUser(data);
-      });
+      fetchUser().then((userData) => {
+          setUser(userData.nome);
+        });
     } catch (e) {
       console.error("Failed to fetch user info", e);
     } finally {
@@ -110,7 +110,7 @@ const Header = () => {
               <span>Carregando...</span>
             ) : (
               <>
-                <span>{user.nome}</span>
+                <span>{user}</span>
                 <button
                   className="icon-btn"
                   aria-label="Logout"
