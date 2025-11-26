@@ -836,3 +836,58 @@ h5 {
 .modal-btn-secondary:hover {
   box-shadow: 0 8px 20px rgba(17, 24, 39, 0.06);
 }
+.create-drone-page {
+  min-height: calc(100vh - 64px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+#create-drone-card.card {
+  width: 760px;
+  max-width: 95%;
+  background: #3f3f3f;
+  padding: 24px;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
+  text-align: center;
+  color: #fff;
+}
+
+/* Backdrop used when modal is open */
+.modal-backdrop-custom {
+  position: fixed;
+  inset: 0;
+  background: rgba(10, 10, 10, 0.45);
+  z-index: 1050;
+}
+
+.modal-wrapper {
+  position: fixed;
+  inset: 0;
+  z-index: 1060;
+  pointer-events: none; /* allow backdrop click capture */
+}
+
+.modal-content-custom {
+  pointer-events: auto;
+  width: 640px;
+  max-width: 96%;
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 18px 50px rgba(2, 6, 23, 0.2);
+  border: 1px solid rgba(15, 23, 42, 0.04);
+  color: #0b1220;
+}
+
+.create-drone-page.modal-open-custom #create-drone-card {
+  filter: blur(6px) saturate(0.9);
+  transition: filter 0.18s ease;
+}
+
+/* ensure modal wrapper centers its content */
+.modal-wrapper .modal-content-custom {
+  margin: auto;
+}

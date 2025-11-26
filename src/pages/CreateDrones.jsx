@@ -1,16 +1,6 @@
 import React, { useState } from "react";
 import Header from "../components/Header";
 
-// page layout container
-const pageContainerStyle = {
-  minHeight: "calc(100vh - 64px)",
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "center",
-  padding: 20,
-  boxSizing: "border-box",
-};
-
 const CreateDrones = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [droneId, setDroneId] = useState("");
@@ -20,7 +10,6 @@ const CreateDrones = () => {
 
   // generators
   function generateId() {
-    // short unique-ish id using timestamp + random
     return `DRN-${Date.now().toString(36).slice(-6).toUpperCase()}`;
   }
 
@@ -52,13 +41,7 @@ const CreateDrones = () => {
   }
 
   function handleSave() {
-    const payload = {
-      id: droneId,
-      model,
-      mac,
-      linked,
-    };
-    // replace with real API call later
+    const payload = { id: droneId, model, mac, linked };
     console.log("Criar drone:", payload);
     setIsOpen(false);
   }
@@ -67,189 +50,93 @@ const CreateDrones = () => {
     <>
       <Header />
 
-      <div style={pageContainerStyle}>
-        <div style={cardStyle}>
-          <h2 style={{ margin: 0 }}>Criar Drone</h2>
-          <p style={{ color: "#555" }}>
-            Use o modal para gerar e registrar um novo drone no sistema.
+      <div className={`create-drone-page ${isOpen ? "modal-open-custom" : ""}`}>
+        <div id="create-drone-card" className="card text-center p-4 bg-dark text-light">
+          <h2 style={{ margin: 0 }}>Cadastrar Drone</h2>
+          <p className="text-light">
+            Clique aqui para cadastrar um novo drone no sistema.
           </p>
-
-          <div
-            style={{
-              display: "flex",
-              gap: 12,
-              alignItems: "center",
-              justifyContent: "center",
-              marginTop: 12,
-            }}
-          >
-            <button onClick={openModal} style={primaryButtonStyle}>
-              Criar novo drone
+          <div className="d-flex justify-content-center mt-3">
+            <button onClick={openModal} className="btn btn-primary">
+              Cadastrar Novo Drone
             </button>
           </div>
         </div>
       </div>
 
       {isOpen && (
-        <div style={backdropStyle} onMouseDown={() => setIsOpen(false)}>
+        <>
           <div
-            style={modalStyle}
-            className="drone-modal"
-            onMouseDown={(e) => e.stopPropagation()}
-          >
-            <div style={modalHeaderStyle}>
-              <h3 style={{ margin: 0 }}>Criar Drone</h3>
-              <button
-                aria-label="Fechar"
-                onClick={() => setIsOpen(false)}
-                style={closeButtonStyle}
-              >
-                ×
-              </button>
-            </div>
-
-            <div style={formGrid}>
-              <div>
-                <label style={labelStyle}>Modelo</label>
-                <div style={{ display: "flex", gap: 8 }}>
-                  <input
-                    type="text"
-                    value={model}
-                    onChange={(e) => setModel(e.target.value)}
-                    style={inputStyle}
-                  />
-                  <button
-                    onClick={() => setModel(generateModel())}
-                    className="modal-btn modal-btn-secondary"
-                  >
-                    Gerar
-                  </button>
-                </div>
-              </div>
-
-              <div>
-                <label style={labelStyle}>Endereço MAC</label>
-                <div style={{ display: "flex", gap: 8 }}>
-                  <input
-                    type="text"
-                    value={mac}
-                    onChange={(e) => setMac(e.target.value)}
-                    style={inputStyle}
-                  />
-                  <button
-                    onClick={() => setMac(generateMac())}
-                    className="modal-btn modal-btn-secondary"
-                  >
-                    Gerar
-                  </button>
-                </div>
-              </div>
-              {/* Buttons row: span full grid width and sit below the two-column fields */}
-              <div
-                style={{
-                  gridColumn: "1 / -1",
-                  display: "flex",
-                  justifyContent: "center",
-                  gap: 12,
-                  marginTop: 18,
-                }}
-              >
+            className="modal-backdrop-custom"
+            onClick={() => setIsOpen(false)}
+          />
+          <div className="modal-wrapper d-flex justify-content-center align-items-center">
+            <div
+              className="modal-content-custom drone-modal p-3 bg-dark text-light"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="d-flex justify-content-between align-items-center mb-2">
+                <h3 style={{ margin: 0 }}>Cadastrar Novo Drone</h3>
                 <button
-                  className="modal-btn modal-btn-secondary"
+                  className="btn-close"
+                  aria-label="Fechar"
                   onClick={() => setIsOpen(false)}
-                >
-                  Cancelar
-                </button>
-                <button
-                  className="modal-btn modal-btn-primary"
-                  onClick={handleSave}
-                >
-                  Salvar
-                </button>
+                />
+              </div>
+
+              <div className="row g-3">
+
+                <div className="col-md-6">
+                  <label className="form-label">Modelo</label>
+                  <div className="d-flex gap-2">
+                    <input
+                      type="text"
+                      className="form-control"
+                      value={model}
+                      onChange={(e) => setModel(e.target.value)}
+                    />
+                  </div>
+                </div>
+
+                <div className="col-md-6">
+                  <label className="form-label">Endereço MAC</label>
+                  <div className="d-flex gap-2">
+                    <input
+                      type="text"
+                      className="form-control"
+                      value={mac}
+                      onChange={(e) => setMac(e.target.value)}
+                    />
+                    <button
+                      onClick={() => setMac(generateMac())}
+                      className="modal-btn modal-btn-secondary"
+                    >
+                      Gerar
+                    </button>
+                  </div>
+                </div>
+
+                <div className="col-12 d-flex justify-content-center gap-3 mt-3">
+                  <button
+                    className="modal-btn modal-btn-secondary"
+                    onClick={() => setIsOpen(false)}
+                  >
+                    Cancelar
+                  </button>
+                  <button
+                    className="modal-btn modal-btn-primary"
+                    onClick={handleSave}
+                  >
+                    Salvar
+                  </button>
+                </div>
               </div>
             </div>
           </div>
-        </div>
+        </>
       )}
     </>
   );
-};
-const cardStyle = {
-  width: 760,
-  maxWidth: "95%",
-  background: "#fff",
-  padding: 24,
-  borderRadius: 12,
-  boxShadow: "0 10px 30px rgba(15,23,42,0.08)",
-  textAlign: "center",
-};
-
-const backdropStyle = {
-  position: "fixed",
-  top: 0,
-  left: 0,
-  right: 0,
-  bottom: 0,
-  backgroundColor: "rgba(10,12,20,0.45)",
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "center",
-  zIndex: 1000,
-};
-
-const modalStyle = {
-  width: 640,
-  maxWidth: "96%",
-  background: "#ffffff",
-  padding: 18,
-  borderRadius: 12,
-  boxShadow: "0 18px 50px rgba(2,6,23,0.2)",
-  border: "1px solid rgba(15,23,42,0.04)",
-};
-
-const modalHeaderStyle = {
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "space-between",
-  marginBottom: 14,
-};
-
-const closeButtonStyle = {
-  border: "none",
-  background: "transparent",
-  fontSize: 22,
-  lineHeight: "18px",
-  cursor: "pointer",
-  color: "#555",
-};
-
-const formGrid = {
-  display: "grid",
-  gridTemplateColumns: "1fr 1fr",
-  gap: 12,
-};
-
-const inputStyle = {
-  width: "100%",
-  padding: "10px 12px",
-  borderRadius: 8,
-  border: "1px solid #e6e9ef",
-  marginTop: 6,
-  marginBottom: 6,
-  boxSizing: "border-box",
-  fontSize: 14,
-};
-
-const labelStyle = { fontSize: 13, fontWeight: 600, color: "#223" };
-
-const primaryButtonStyle = {
-  padding: "10px 16px",
-  borderRadius: 10,
-  border: "none",
-  background: "#2563eb",
-  color: "#fff",
-  cursor: "pointer",
-  fontWeight: 600,
 };
 
 export default CreateDrones;
