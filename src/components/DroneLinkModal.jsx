@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { apiFetch } from "../js/Token";
 import { BASE_URLLocal } from "../js/Urls";
-import { atualizar } from "../js/Auxilio";
 
 const DroneLinkModal = ({ modalId = "droneLinkModal", onLinkDrone }) => {
   const [formData, setFormData] = useState({
@@ -38,7 +37,6 @@ const DroneLinkModal = ({ modalId = "droneLinkModal", onLinkDrone }) => {
       }
 
       setFormData({ serialCode: "", location: "" });
-      atualizar(true);
     } catch (error) {
       console.error("Error linking drone:", error);
     }

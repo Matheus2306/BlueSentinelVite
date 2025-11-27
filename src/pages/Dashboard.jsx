@@ -3,7 +3,6 @@ import CardHeader from "../components/CardHeader";
 import CardBody from "../components/CardBody";
 import { apiFetch } from "../js/Token";
 import { BASE_URLLocal } from "../js/Urls";
-import { send } from "../js/Auxilio";
 
 const Dashboard = () => {
   const [data, setData] = useState([]);
@@ -20,7 +19,7 @@ const Dashboard = () => {
       .catch((error) => {
         console.error("Error fetching drones:", error);
       });
-  }, [send]);
+  }, [data]);
   
   return (
     <div className="vh-100 w-100 d-flex align-items-center justify-content-center">
