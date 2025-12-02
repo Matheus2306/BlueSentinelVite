@@ -393,7 +393,6 @@ h1.brand {
 
 /* Registration form: keep only visual rules that Bootstrap cannot provide */
 
-
 .register-form .form-control {
   background: rgba(255, 255, 255, 0.12);
   color: var(--text-color, #fff);
@@ -875,6 +874,56 @@ h5 {
   margin: auto;
 }
 
-.color{
+.color {
   background: #1a0066;
+}
+
+.scrollbar::-webkit-scrollbar {
+  width: 8px;
+}
+.scrollbar::-webkit-scrollbar-thumb {
+  background-color: rgba(134, 126, 126, 0.562);
+  border-radius: 4px;
+}
+
+.not-found-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg, linear-gradient(180deg, #1c1264 0%, #381d89 100%));
+  color: var(--text-color, #fff);
+  padding: 2rem;
+  text-align: center;
+}
+
+.not-found-content {
+  max-width: 520px;
+}
+
+.not-found-eyebrow {
+  text-transform: uppercase;
+  letter-spacing: 0.28em;
+  font-size: 0.85rem;
+  margin-bottom: 1rem;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.not-found-page h1 {
+  font-size: clamp(3rem, 5vw, 4.5rem);
+  margin-bottom: 1rem;
+}
+
+.not-found-description {
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 1.05rem;
+  line-height: 1.7;
+  margin-bottom: 2rem;
+}
+
+.not-found-action {
+  padding: 0.75rem 2.5rem;
+  border-radius: 999px;
+  font-weight: 600;
+  border: none;
 }
