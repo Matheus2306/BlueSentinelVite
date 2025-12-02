@@ -93,66 +93,69 @@ const Header = () => {
             <i className="bi bi-house-fill fs-3" aria-hidden="true"></i>
           </button>
         )}
-        
-
-        <button
-          className="icon-btn"
-          aria-label="Analytics"
-          onClick={() => navigate("/dashboard")}
-        >
-          <i id="graphIcon" className="bi bi-graph-up" aria-hidden="true"></i>
-        </button>
 
         {/* Make this a button for accessibility and put navigate inside the component */}
-        {isAuthenticated ? (
-          <div className="user-info">
-            {loadingUser ? (
-              <span>Carregando...</span>
-            ) : (
-              <>
-                <span>{user}</span>
-                <button
-                  className="icon-btn"
-                  aria-label="Logout"
-                  onClick={() => {
-                    handleLogout();
-                  }}
-                >
-                  <i
-                    className="bi bi-box-arrow-right fs-4"
-                    aria-hidden="true"
-                  ></i>
-                </button>
-              </>
-            )}
-          </div>
-        ) : (
-          <button
-            className="icon-btn"
-            aria-label="Profile"
-            onClick={() => {
-              navigate("/register");
-            }}
-          >
-            <i
-              id="personIcon"
-              className="bi bi-person-fill"
-              aria-hidden="true"
-            ></i>
-          </button>
-        )}
-
-        <button
-          className="icon-btn"
-          aria-label={t("Settings")}
-          onClick={() => navigate("/settings")}
-        >
-          <i
-            id="settingsIcon"
-            className="bi bi-gear-fill"
-            aria-hidden="true"
-          ></i>
-        </button>
+        <div className="d-flex gap-2 align-items-center">
+          {isAuthenticated ? (
+            <div className="user-info">
+              {loadingUser ? (
+                <span>Carregando...</span>
+              ) : (
+                <>
+                  <span className="fs-4 mx-2">{user}</span>
+                  <button
+                    className="icon-btn px-3"
+                    aria-label="Logout"
+                    onClick={() => {
+                      handleLogout();
+                    }}
+                  >
+                    <i
+                      className="bi bi-box-arrow-right fs-3"
+                      aria-hidden="true"
+                    ></i>
+                  </button>
+                  <button
+                    className="icon-btn mx-3"
+                    aria-label="Analytics"
+                    onClick={() => navigate("/dashboard")}
+                  >
+                    <i
+                      id="graphIcon"
+                      className="bi bi-graph-up"
+                      aria-hidden="true"
+                    ></i>
+                  </button>
+                </>
+              )}
+              <button
+                className="icon-btn"
+                aria-label={t("Settings")}
+                onClick={() => navigate("/settings")}
+              >
+                <i
+                  id="settingsIcon"
+                  className="bi bi-gear-fill"
+                  aria-hidden="true"
+                ></i>
+              </button>
+            </div>
+          ) : (
+            <button
+              className="icon-btn"
+              aria-label="Profile"
+              onClick={() => {
+                navigate("/register");
+              }}
+            >
+              <i
+                id="personIcon"
+                className="bi bi-person-fill"
+                aria-hidden="true"
+              ></i>
+            </button>
+          )}
+        </div>
 
         <button
           className="icon-btn"
