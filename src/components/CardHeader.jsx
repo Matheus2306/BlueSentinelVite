@@ -6,11 +6,13 @@ const CardHeader = ({
   btnText,
   modalId = "droneLinkModal",
   onLinkDrone,
+  noneBtn
 }) => {
   return (
     <div className="mt-2 border-bottom border-dark d-flex justify-content-between align-items-center py-2">
       <span className="fs-4 text-black-50 mx-2">{title}</span>
       <button
+        hidden={noneBtn}
         type="button"
         className="btn btn-success"
         data-bs-toggle="modal"
