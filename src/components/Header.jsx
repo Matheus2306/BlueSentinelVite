@@ -90,17 +90,10 @@ const Header = () => {
             aria-label="Home"
             onClick={() => navigate("/")}
           >
-            <i className="bi bi-house-fill" aria-hidden="true"></i>
+            <i className="bi bi-house-fill fs-3" aria-hidden="true"></i>
           </button>
         )}
-        <button className="icon-btn" aria-label="Video">
-          <i
-            id="videoIcon"
-            className="bi bi-camera-video-fill"
-            aria-hidden="true"
-            onClick={() => navigate("/cam")}
-          ></i>
-        </button>
+        
 
         <button
           className="icon-btn"
@@ -174,7 +167,7 @@ const Header = () => {
           aria-label={t("About")}
           onClick={() => navigate("/about")}
         >
-          <i className="bi bi-lightbulb-fill" aria-hidden="true"></i>
+          <i className="bi bi-lightbulb-fill fs-3" aria-hidden="true"></i>
         </button>
       </nav>
     </header>

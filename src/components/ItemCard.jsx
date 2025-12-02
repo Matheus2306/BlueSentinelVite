@@ -1,6 +1,6 @@
 import React from "react";
 
-const ItemCard = ({ modelo, localizacao, tempoAtividade, status }) => {
+const ItemCard = ({ modelo, localizacao, tempoAtividade, status, handleDeleteDrone, Id }) => {
   return (
     <div className="d-flex gap-1 shadow-sm color p-2 rounded mx-2">
       <div className="w-75 d-flex flex-column gap-1 justify-content-between">
@@ -16,7 +16,7 @@ const ItemCard = ({ modelo, localizacao, tempoAtividade, status }) => {
         </div>
       </div>
       <div className="d-flex w-25 justify-content-end align-items-center">
-        <span className="bg-danger rounded-circle px-2 py-1 text-white cursor-pointer mx-3">
+        <span onClick={() => handleDeleteDrone(Id)} className="bg-danger rounded-circle px-2 py-1 text-white cursor-pointer mx-3">
           <i className="bi bi-trash-fill fs-4 "></i>
         </span>
       </div>

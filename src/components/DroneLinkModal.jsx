@@ -19,7 +19,9 @@ const DroneLinkModal = ({ modalId = "droneLinkModal", onLinkDrone }) => {
     }
 
     const payload = {
-      localizacao
+      localizacao,
+      tempoEmMili: 0,
+      status: false,
     };
 
     try {
