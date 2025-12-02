@@ -14,23 +14,28 @@ import { BrowserRouter, Route, Routes } from "react-router";
 import CreateDrones from "./pages/CreateDrones.jsx";
 
 import "./i18n"; // importa a config
+import { AuthProvider } from "./context/AuthContext";
 import About from "./pages/About.jsx";
+import NotFound from "./pages/NotFound.jsx";
 // initialize theme variables from localStorage before first render
 initTheme();
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<App />} />
-        <Route path="/register" element={<RegisterPage />} />
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/cam" element={<CamView />} />
-        <Route path="/settings" element={<SettingsPage />} />
-        <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/about" element={<About />} />
-        <Route path="/create-drones" element={<CreateDrones />} />
-      </Routes>
-    </BrowserRouter>
+    <AuthProvider>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<App />} />
+          <Route path="*" element={<NotFound />} />
+          <Route path="/register" element={<RegisterPage />} />
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/cam" element={<CamView />} />
+          <Route path="/settings" element={<SettingsPage />} />
+          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/create-drones" element={<CreateDrones />} />
+        </Routes>
+      </BrowserRouter>
+    </AuthProvider>
   </StrictMode>
 );

@@ -3,8 +3,8 @@ import { useNavigate, useLocation } from "react-router";
 import { toggleTheme } from "../theme";
 import LogoHeader from "../img/logoHeader.png";
 import { useTranslation } from "react-i18next";
-import { clearToken, token } from "../js/Token";
 import { fetchUser } from "../js/user";
+import { useAuth } from "../context/AuthContext";
 
 const Header = () => {
   const navigate = useNavigate();
@@ -12,33 +12,33 @@ const Header = () => {
   const { t } = useTranslation();
   const [user, setUser] = useState(null);
   const [loadingUser, setLoadingUser] = useState(false);
+  const { token, logout, isAuthenticated } = useAuth();
 
-  // token vem de um módulo externo e não dispara re-renders; suprimir regra de dependências
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
+    let cancelled = false;
     if (!token) {
       setUser(null);
       return;
     }
 
-    let mounted = true;
-    setLoadingUser(true);
-
-    (async () => {
+    const load = async () => {
+      setLoadingUser(true);
       try {
-        const userData = await fetchUser();
-        if (mounted) setUser(userData);
-      } catch (e) {
-        console.error("Failed to fetch user info", e);
+        const data = await fetchUser(token);
+        if (!cancelled) setUser(data?.nome || data?.email || null);
+      } catch (err) {
+        console.error("Failed to fetch user info", err);
+        if (!cancelled) setUser(null);
       } finally {
-        if (mounted) setLoadingUser(false);
+        if (!cancelled) setLoadingUser(false);
       }
-    })();
-
-    return () => {
-      mounted = false;
     };
-  }, []);
+
+    load();
+    return () => {
+      cancelled = true;
+    };
+  }, [token]);
 
   // Track theme mode locally so we can switch the icon when theme changes
   const [mode, setMode] = useState(() => {
@@ -72,7 +72,7 @@ const Header = () => {
   };
 
   const handleLogout = () => {
-    clearToken();
+    logout();
     setUser(null);
   };
 
@@ -90,76 +90,72 @@ const Header = () => {
             aria-label="Home"
             onClick={() => navigate("/")}
           >
-            <i className="bi bi-house-fill" aria-hidden="true"></i>
+            <i className="bi bi-house-fill fs-3" aria-hidden="true"></i>
           </button>
         )}
-        <button className="icon-btn" aria-label="Video">
-          <i
-            id="videoIcon"
-            className="bi bi-camera-video-fill"
-            aria-hidden="true"
-            onClick={() => navigate("/cam")}
-          ></i>
-        </button>
-
-        <button
-          className="icon-btn"
-          aria-label="Analytics"
-          onClick={() => navigate("/dashboard")}
-        >
-          <i id="graphIcon" className="bi bi-graph-up" aria-hidden="true"></i>
-        </button>
 
         {/* Make this a button for accessibility and put navigate inside the component */}
-        {token ? (
-          <div className="user-info">
-            {loadingUser ? (
-              <span>Carregando...</span>
-            ) : (
-              <>
-                <span>{user?.nome}</span>
-                <button
-                  className="icon-btn"
-                  aria-label="Logout"
-                  onClick={() => {
-                    handleLogout();
-                  }}
-                >
-                  <i
-                    className="bi bi-box-arrow-right fs-4"
-                    aria-hidden="true"
-                  ></i>
-                </button>
-              </>
-            )}
-          </div>
-        ) : (
-          <button
-            className="icon-btn"
-            aria-label="Profile"
-            onClick={() => {
-              navigate("/register");
-            }}
-          >
-            <i
-              id="personIcon"
-              className="bi bi-person-fill"
-              aria-hidden="true"
-            ></i>
-          </button>
-        )}
-
-        <button
-          className="icon-btn"
-          aria-label={t("Settings")}
-          onClick={() => navigate("/settings")}
-        >
-          <i
-            id="settingsIcon"
-            className="bi bi-gear-fill"
-            aria-hidden="true"
-          ></i>
-        </button>
+        <div className="d-flex gap-2 align-items-center">
+          {isAuthenticated ? (
+            <div className="user-info">
+              {loadingUser ? (
+                <span>Carregando...</span>
+              ) : (
+                <>
+                  <span className="fs-4 mx-2">{user}</span>
+                  <button
+                    className="icon-btn px-3"
+                    aria-label="Logout"
+                    onClick={() => {
+                      handleLogout();
+                    }}
+                  >
+                    <i
+                      className="bi bi-box-arrow-right fs-3"
+                      aria-hidden="true"
+                    ></i>
+                  </button>
+                  <button
+                    className="icon-btn mx-3"
+                    aria-label="Analytics"
+                    onClick={() => navigate("/dashboard")}
+                  >
+                    <i
+                      id="graphIcon"
+                      className="bi bi-graph-up"
+                      aria-hidden="true"
+                    ></i>
+                  </button>
+                </>
+              )}
+              <button
+                className="icon-btn"
+                aria-label={t("Settings")}
+                onClick={() => navigate("/settings")}
+              >
+                <i
+                  id="settingsIcon"
+                  className="bi bi-gear-fill"
+                  aria-hidden="true"
+                ></i>
+              </button>
+            </div>
+          ) : (
+            <button
+              className="icon-btn"
+              aria-label="Profile"
+              onClick={() => {
+                navigate("/register");
+              }}
+            >
+              <i
+                id="personIcon"
+                className="bi bi-person-fill"
+                aria-hidden="true"
+              ></i>
+            </button>
+          )}
+        </div>
 
         <button
           className="icon-btn"
@@ -174,7 +170,7 @@ const Header = () => {
           aria-label={t("About")}
           onClick={() => navigate("/about")}
         >
-          <i className="bi bi-lightbulb-fill" aria-hidden="true"></i>
+          <i className="bi bi-lightbulb-fill fs-3" aria-hidden="true"></i>
         </button>
         {token &&
           user &&
