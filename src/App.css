@@ -829,9 +829,9 @@ h5 {
 }
 
 #create-drone-card.card {
-  width: 760px;
-  max-width: 95%;
-  background: #3f3f3f;
+  /* width: 760px; */
+  /* max-width: 95%; */
+  background: #382d2d;
   padding: 24px;
   border-radius: 12px;
   box-shadow: 0 10px 30px rgba(15, 23, 42, 0.08);

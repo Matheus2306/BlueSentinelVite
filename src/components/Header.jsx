@@ -13,25 +13,32 @@ const Header = () => {
   const [user, setUser] = useState(null);
   const [loadingUser, setLoadingUser] = useState(false);
 
-  useEffect(() => {  
+  // token vem de um módulo externo e não dispara re-renders; suprimir regra de dependências
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  useEffect(() => {
     if (!token) {
       setUser(null);
       return;
     }
-    // Fetch user info if token is set
-    try {
-      setLoadingUser(true);
 
+    let mounted = true;
+    setLoadingUser(true);
 
-      fetchUser().then((userData) => {
-          setUser(userData.nome);
-        });
-    } catch (e) {
-      console.error("Failed to fetch user info", e);
-    } finally {
-      setLoadingUser(false);
-    }
-  }, [token]);
+    (async () => {
+      try {
+        const userData = await fetchUser();
+        if (mounted) setUser(userData);
+      } catch (e) {
+        console.error("Failed to fetch user info", e);
+      } finally {
+        if (mounted) setLoadingUser(false);
+      }
+    })();
+
+    return () => {
+      mounted = false;
+    };
+  }, []);
 
   // Track theme mode locally so we can switch the icon when theme changes
   const [mode, setMode] = useState(() => {
@@ -110,7 +117,7 @@ const Header = () => {
               <span>Carregando...</span>
             ) : (
               <>
-                <span>{user}</span>
+                <span>{user?.nome}</span>
                 <button
                   className="icon-btn"
                   aria-label="Logout"
@@ -169,6 +176,17 @@ const Header = () => {
         >
           <i className="bi bi-lightbulb-fill" aria-hidden="true"></i>
         </button>
+        {token &&
+          user &&
+          ["admin@admin", "admin2@admin"].includes(user.email) && (
+            <button
+              className="icon-btn"
+              aria-label={t("CreateDrones")}
+              onClick={() => navigate("/create-drones")}
+            >
+              <i className="bi bi-plus-circle" aria-hidden="true"></i>
+            </button>
+          )}
       </nav>
     </header>
   );

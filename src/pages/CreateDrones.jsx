@@ -7,27 +7,26 @@ import { fetchUser } from "../js/user";
 const CreateDrones = () => {
   // --- Proteção Admin ---
 
-
   const [isOpen, setIsOpen] = useState(false);
   const [droneId, setDroneId] = useState("");
   const [model, setModel] = useState("");
   const [mac, setMac] = useState("");
   const [role, setRole] = useState([]);
-  
-  useEffect(() => {  
-      if (!token) {
-        return;
-      }
-      // Fetch user info if token is set
-      try {
-        fetchUser().then((userData) => {
-            setRole(userData.roles);
-            console.log(role)
-        });
-      } catch (e) {
-        console.error("Failed to fetch user info", e);
-      } 
-    }, [token]);
+
+  useEffect(() => {
+    if (!token) {
+      return;
+    }
+    // Fetch user info if token is set
+    try {
+      fetchUser().then((userData) => {
+        setRole(userData.roles);
+        console.log(role);
+      });
+    } catch (e) {
+      console.error("Failed to fetch user info", e);
+    }
+  }, [token]);
 
   // Gerador de ID
   function generateId() {
@@ -53,11 +52,15 @@ const CreateDrones = () => {
 
   return (
     <>
-    {role.includes("Admin") && <Navigate to="/" replace={true} />}
+      {role.includes("admin02@admin") && <Navigate to="/" replace={true} />}
       <Header />
 
       {/* Página */}
-      <div className={`container py-5 ${isOpen ? "modal-open-custom" : ""}`}>
+      <div
+        className={`container p-5 my-5 align-items-center${
+          isOpen ? "modal-open-custom" : ""
+        }`}
+      >
         <div className="card bg-dark text-light text-center p-4 shadow-lg">
           <h2 className="mb-2">Cadastrar Drone</h2>
           <p>Clique abaixo para cadastrar um novo drone no sistema.</p>
@@ -81,7 +84,7 @@ const CreateDrones = () => {
                 className="modal-content bg-dark text-light"
                 onClick={(e) => e.stopPropagation()}
               >
-                <div className="modal-header">
+                <div className="modal-header bg-gradient-dark">
                   <h5 className="modal-title">Cadastrar Novo Drone</h5>
                   <button
                     className="btn-close btn-close-white"
@@ -89,17 +92,7 @@ const CreateDrones = () => {
                   ></button>
                 </div>
 
-                <div className="modal-body">
-                  <div className="mb-3">
-                    <label className="form-label">ID do Drone (gerado)</label>
-                    <input
-                      type="text"
-                      className="form-control"
-                      value={droneId}
-                      disabled
-                    />
-                  </div>
-
+                <div className="modal-body bg-gradient">
                   <div className="mb-3">
                     <label className="form-label">Modelo</label>
                     <input
@@ -131,10 +124,7 @@ const CreateDrones = () => {
                   >
                     Cancelar
                   </button>
-                  <button
-                    className="btn btn-primary"
-                    onClick={handleSave}
-                  >
+                  <button className="btn btn-primary" onClick={handleSave}>
                     Salvar
                   </button>
                 </div>
