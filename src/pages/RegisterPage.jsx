@@ -75,7 +75,7 @@ const RegisterPage = () => {
   };
 
   return (
-    <div className="d-flex flex-column gap-3 vh-100 align-items-center justify-content-center">
+    <div className="d-flex flex-column gap-3 vh-100 align-items-center justify-content-center w-100 mx-auto">
       <div
         id="card-register"
         className="register-card w-25 h-75 text-center p-4"
@@ -86,16 +86,16 @@ const RegisterPage = () => {
             <img src={logoHeader} alt="logo" />
           </div>
         </div>
-        <div className="d-flex align-items-center ">
+        <div className="position-relative mb-3">
           <button
             type="button"
-            className="btn btn-link text-white back-btn"
+            className="btn btn-link text-white back-btn position-absolute start-0"
             onClick={() => navigate(-1)}
             aria-label={t("Voltar")}
           >
             <i className="bi bi-arrow-left fs-4"></i>
           </button>
-          <h5 className="card-title text-center mt-2 mb-1 mx-5">
+          <h5 className="card-title text-center fw-semibold text-white m-4">
             {t("Cadastrar")}
           </h5>
         </div>
@@ -104,11 +104,11 @@ const RegisterPage = () => {
           className="register-form d-flex flex-column gap-3 w-100 h-100 align-items-center"
           onSubmit={handleSubmit}
         >
-          <div className="">
+          <div>
             <label className="form-label">{t("Nome")}</label>
             <input
               type="text"
-              className="form-control w-100"
+              className="form-control w-100 text-center d-flex justify-content-center"
               name="nome"
               value={form.nome}
               onChange={handleChange}
@@ -140,11 +140,11 @@ const RegisterPage = () => {
             />
           </div>
 
-          <div className="">
+          <div className="w-50">
             <label className="form-label">{t("Nascimento")}</label>
             <input
               type="date"
-              className="form-control w-100"
+              className="form-control"
               name="nascimento"
               value={form.nascimento}
               onChange={handleChange}
@@ -166,10 +166,14 @@ const RegisterPage = () => {
             </button>
           </div>
         </form>
-      </div>
-      <span className="text-info text-decoration-underline" role="button" onClick={() => navigate("/login")}>
+      <span
+        className="text-info text-decoration-underline"
+        role="button"
+        onClick={() => navigate("/login")}
+      >
         {t("já possui uma conta?")}
       </span>
+      </div>
     </div>
   );
 };
