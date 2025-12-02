@@ -12,6 +12,7 @@ const CreateDrones = () => {
   const [model, setModel] = useState("");
   const [mac, setMac] = useState("");
   const [role, setRole] = useState([]);
+  const [user, setUser] = useState(null);
 
   useEffect(() => {
     if (!token) {
@@ -19,14 +20,17 @@ const CreateDrones = () => {
     }
     // Fetch user info if token is set
     try {
-      fetchUser().then((userData) => {
-        setRole(userData.roles);
-        console.log(role);
+      fetchUser(token).then((userData) => {
+        if (userData) {
+          setRole(userData.roles || []);
+          setUser(userData);
+          console.log(userData.roles);
+        }
       });
     } catch (e) {
       console.error("Failed to fetch user info", e);
     }
-  }, [token]);
+  }, []);
 
   // Gerador de ID
   function generateId() {
@@ -40,11 +44,34 @@ const CreateDrones = () => {
   }
 
   function openModal() {
+    // Verifica se o usuário é admin antes de abrir o modal
+    const roles = user?.roles || role || [];
+    const isAdmin = Array.isArray(roles)
+      ? roles.some((r) => String(r).toLowerCase().includes("admin"))
+      : String(roles).toLowerCase().includes("admin");
+
+    if (!isAdmin) {
+      alert("Apenas administradores podem cadastrar drones.");
+      return;
+    }
+
     initNewDrone();
     setIsOpen(true);
   }
 
   function handleSave() {
+    // Rechecar permissão antes de salvar (caso a sessão/mudança tenha ocorrido)
+    const roles = user?.roles || role || [];
+    const isAdmin = Array.isArray(roles)
+      ? roles.some((r) => String(r).toLowerCase().includes("admin"))
+      : String(roles).toLowerCase().includes("admin");
+
+    if (!isAdmin) {
+      alert("Ação não permitida. Usuário sem permissão de administrador.");
+      setIsOpen(false);
+      return;
+    }
+
     const payload = { id: droneId, model, mac, linked: false };
     console.log("Criar drone:", payload);
     setIsOpen(false);
@@ -52,7 +79,7 @@ const CreateDrones = () => {
 
   return (
     <>
-      {role.includes("admin02@admin") && <Navigate to="/" replace={true} />}
+      {/* Página disponível; controle de abertura/salvamento do modal bloqueia não-admins */}
       <Header />
 
       {/* Página */}

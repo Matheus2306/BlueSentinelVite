@@ -25,7 +25,7 @@ const Header = () => {
       setLoadingUser(true);
       try {
         const data = await fetchUser(token);
-        if (!cancelled) setUser(data?.nome || data?.email || null);
+        if (!cancelled) setUser(data || null);
       } catch (err) {
         console.error("Failed to fetch user info", err);
         if (!cancelled) setUser(null);
@@ -102,7 +102,7 @@ const Header = () => {
                 <span>Carregando...</span>
               ) : (
                 <>
-                  <span className="fs-4 mx-2">{user}</span>
+                  <span className="fs-4 mx-2">{user?.nome || user?.email}</span>
                   <button
                     className="icon-btn px-3"
                     aria-label="Logout"
@@ -173,6 +173,7 @@ const Header = () => {
           <i className="bi bi-lightbulb-fill fs-3" aria-hidden="true"></i>
         </button>
         {token &&
+          !loadingUser &&
           user &&
           ["admin@admin", "admin2@admin"].includes(user.email) && (
             <button
