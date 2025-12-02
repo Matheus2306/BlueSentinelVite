@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { apiFetch } from "../js/Token";
 import { BASE_URLLocal } from "../js/Urls";
 
@@ -7,6 +7,9 @@ const DroneLinkModal = ({ modalId = "droneLinkModal", onLinkDrone }) => {
     serialCode: "",
     location: "",
   });
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const modalRef = useRef(null);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -15,6 +18,7 @@ const DroneLinkModal = ({ modalId = "droneLinkModal", onLinkDrone }) => {
     const localizacao = formData.location.trim();
 
     if (!mac || !localizacao) {
+      setError("Por favor, preencha todos os campos.");
       return;
     }
 
@@ -25,7 +29,9 @@ const DroneLinkModal = ({ modalId = "droneLinkModal", onLinkDrone }) => {
     };
 
     try {
-      await apiFetch(
+      setLoading(true);
+      setError(null);
+      const response = await apiFetch(
         `${BASE_URLLocal}/api/drones/vincular?mac=${encodeURIComponent(mac)}`,
         {
           method: "POST",
@@ -34,13 +40,32 @@ const DroneLinkModal = ({ modalId = "droneLinkModal", onLinkDrone }) => {
         }
       );
 
+      if (!response.ok) {
+        const errorData = await response.text();
+        setError(errorData);
+        setFormData({ serialCode: "", location: "" });
+        return;
+      }
+
       if (onLinkDrone) {
-        onLinkDrone({ mac, ...payload });
+        await onLinkDrone({ mac, ...payload });
       }
 
       setFormData({ serialCode: "", location: "" });
+
+      if (modalRef.current && typeof window !== "undefined") {
+        const modalInstance =
+          window.bootstrap?.Modal.getInstance(modalRef.current) ||
+          (window.bootstrap?.Modal
+            ? new window.bootstrap.Modal(modalRef.current)
+            : null);
+
+        modalInstance?.hide();
+      }
     } catch (error) {
-      console.error("Error linking drone:", error);
+      setFormData({ serialCode: "", location: "" });
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -48,6 +73,7 @@ const DroneLinkModal = ({ modalId = "droneLinkModal", onLinkDrone }) => {
     <div
       className="modal fade"
       id={modalId}
+      ref={modalRef}
       tabIndex="-1"
       aria-labelledby={`${modalId}Label`}
       aria-hidden="true"
@@ -71,6 +97,21 @@ const DroneLinkModal = ({ modalId = "droneLinkModal", onLinkDrone }) => {
                 Informe o codigo ou identificador unico do drone que deseja
                 associar.
               </p>
+              {error &&
+                // agenda ocultar a mensagem após 5 segundos (5000ms)
+                (setTimeout(() => {
+                  const el = document.getElementById(`${modalId}Error`);
+                  if (el) el.style.display = "none";
+                }, 5000),
+                (
+                  <div
+                    id={`${modalId}Error`}
+                    className="alert alert-danger"
+                    role="alert"
+                  >
+                    {error}
+                  </div>
+                ))}
               <div className="form-floating">
                 <input
                   type="text"
@@ -107,18 +148,10 @@ const DroneLinkModal = ({ modalId = "droneLinkModal", onLinkDrone }) => {
               </div>
             </div>
             <div className="modal-footer">
-              <button
-                type="button"
-                className="btn btn-secondary"
-                data-bs-dismiss="modal"
-              >
+              <button type="button" className="btn" data-bs-dismiss="modal">
                 Cancelar
               </button>
-              <button
-                type="submit"
-                className="btn btn-success"
-                data-bs-dismiss="modal"
-              >
+              <button type="submit" className="btn btn-success">
                 Vincular
               </button>
             </div>

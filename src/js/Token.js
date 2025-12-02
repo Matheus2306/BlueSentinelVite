@@ -68,7 +68,7 @@ export const apiFetch = async (url, options = {}) => {
       }
 
       const res = await fetch(
-        BASE_URLLocal + "/Usuario/refresh-token",
+        BASE_URLLocal + "/Usuario/refresh",
         {
           method: "POST",
           headers: {
