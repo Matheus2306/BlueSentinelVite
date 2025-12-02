@@ -48,7 +48,7 @@ const DroneLinkModal = ({ modalId = "droneLinkModal", onLinkDrone }) => {
       }
 
       if (onLinkDrone) {
-        onLinkDrone({ mac, ...payload });
+        await onLinkDrone({ mac, ...payload });
       }
 
       setFormData({ serialCode: "", location: "" });
@@ -97,20 +97,21 @@ const DroneLinkModal = ({ modalId = "droneLinkModal", onLinkDrone }) => {
                 Informe o codigo ou identificador unico do drone que deseja
                 associar.
               </p>
-              {error && (
+              {error &&
                 // agenda ocultar a mensagem após 5 segundos (5000ms)
                 (setTimeout(() => {
                   const el = document.getElementById(`${modalId}Error`);
                   if (el) el.style.display = "none";
                 }, 5000),
-                <div
-                  id={`${modalId}Error`}
-                  className="alert alert-danger"
-                  role="alert"
-                >
-                  {error}
-                </div>)
-              )}
+                (
+                  <div
+                    id={`${modalId}Error`}
+                    className="alert alert-danger"
+                    role="alert"
+                  >
+                    {error}
+                  </div>
+                ))}
               <div className="form-floating">
                 <input
                   type="text"

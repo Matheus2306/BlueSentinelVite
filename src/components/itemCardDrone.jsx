@@ -6,6 +6,7 @@ const itemCardDrone = ({ drone, handleDeleteDrone }) => {
       <div className="d-flex flex-column">
         <span className="fs-6">Usuário: {drone.usuario.nome}</span>
         <span className="fs-6">Modelo do Drone: {drone.droneFabri.modelo}</span>
+        <span>Localização: {drone.localizacao}</span>
       </div>
       <div className="d-flex justify-content-end align-items-center">
         <span

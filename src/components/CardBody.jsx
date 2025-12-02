@@ -4,7 +4,7 @@ import ItemCardDrone from "./itemCardDrone";
 
 const CardBody = ({ data, handleDeleteDrone, type }) => {
   return (
-    <div className="d-flex flex-column h-75 gap-2 mt-2 overflow-y-hidden overflow-y-scroll scrollbar">
+    <div className="d-flex flex-column h-75 gap-2 mt-2 overflow-y-scroll scrollbar">
       {data.map((drone) =>
         type == "cardDrone" ? (
           <ItemCard
