@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Header from "../components/Header";
 import { Navigate } from "react-router";
 import { token, apiFetch } from "../js/Token";
@@ -18,6 +18,8 @@ const CreateDrones = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [isSearching, setIsSearching] = useState(false);
   const [searchedTerm, setSearchedTerm] = useState("");
+  const cache = useRef(new Map());
+
 
   useEffect(() => {
     if (!token) {
@@ -51,43 +53,57 @@ const CreateDrones = () => {
 
   // Busca por modelo usando GET na API. Se searchTerm for vazio, recarrega a lista completa.
   const searchByModel = async (term) => {
-    const q = (term ?? searchTerm)?.trim();
-    if (!q) {
-      // se campo vazio, apenas recarrega tudo
-      setSearchedTerm("");
-      void refreshDronesList();
-      return;
-    }
+  const raw = (term ?? searchTerm)?.trim();
+  if (!raw) {
+    setSearchedTerm("");
+    void refreshDronesList();
+    return;
+  }
 
-    setSearchedTerm(q);
-    setIsSearching(true);
-    try {
-      // Supondo que o endpoint aceite ?modelo=... (o POST usa `modelo` no payload)
-      const path = `/api/DroneFabris?modelo=${encodeURIComponent(q)}`;
-      const result = await getApi(path);
-      // aplicar filtro exato case-insensitive sobre o campo de modelo (com aliases)
-      const items = Array.isArray(result) ? result : [];
-      const filtered = items.filter((d) => {
-        const modelName =
-          d?.modelo ??
-          d?.model ??
-          d?.modeloDrone ??
-          d?.nomeModelo ??
-          d?.modelo_nome ??
-          null;
-        return (
-          typeof modelName === "string" &&
-          modelName.trim().toLowerCase() === q.toLowerCase()
-        );
-      });
-      setDronesList(filtered);
-    } catch (err) {
-      console.error("Erro na busca por modelo:", err);
-      setDronesList([]);
-    } finally {
-      setIsSearching(false);
-    }
-  };
+  // normaliza chave do cache
+  const q = raw.toLowerCase();
+  setSearchedTerm(raw);
+
+  // --- CHECK DO CACHE ---
+  if (cache.current.has(q)) {
+    console.log("⚡ Resultado vindo do cache!");
+    setDronesList(cache.current.get(q));
+    return;
+  }
+
+  setIsSearching(true);
+  try {
+    const path = `/api/DroneFabris?modelo=${encodeURIComponent(raw)}`;
+    const result = await getApi(path);
+    const items = Array.isArray(result) ? result : [];
+
+    const filtered = items.filter((d) => {
+      const modelName =
+        d?.modelo ??
+        d?.model ??
+        d?.modeloDrone ??
+        d?.nomeModelo ??
+        d?.modelo_nome ??
+        null;
+
+      return (
+        typeof modelName === "string" &&
+        modelName.trim().toLowerCase() === q
+      );
+    });
+
+    // --- SALVAR NO CACHE ---
+    cache.current.set(q, filtered);
+
+    setDronesList(filtered);
+  } catch (err) {
+    console.error("Erro na busca por modelo:", err);
+    setDronesList([]);
+  } finally {
+    setIsSearching(false);
+  }
+};
+
 
   // inicializa campos do modal
   function initNewDrone() {
