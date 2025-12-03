@@ -15,6 +15,9 @@ const CreateDrones = () => {
   const [role, setRole] = useState([]);
   const [user, setUser] = useState(null);
   const [dronesList, setDronesList] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [isSearching, setIsSearching] = useState(false);
+  const [searchedTerm, setSearchedTerm] = useState("");
 
   useEffect(() => {
     if (!token) {
@@ -43,6 +46,46 @@ const CreateDrones = () => {
     } catch (err) {
       console.error("Erro ao carregar lista de DroneFabris:", err);
       setDronesList([]);
+    }
+  };
+
+  // Busca por modelo usando GET na API. Se searchTerm for vazio, recarrega a lista completa.
+  const searchByModel = async (term) => {
+    const q = (term ?? searchTerm)?.trim();
+    if (!q) {
+      // se campo vazio, apenas recarrega tudo
+      setSearchedTerm("");
+      void refreshDronesList();
+      return;
+    }
+
+    setSearchedTerm(q);
+    setIsSearching(true);
+    try {
+      // Supondo que o endpoint aceite ?modelo=... (o POST usa `modelo` no payload)
+      const path = `/api/DroneFabris?modelo=${encodeURIComponent(q)}`;
+      const result = await getApi(path);
+      // aplicar filtro exato case-insensitive sobre o campo de modelo (com aliases)
+      const items = Array.isArray(result) ? result : [];
+      const filtered = items.filter((d) => {
+        const modelName =
+          d?.modelo ??
+          d?.model ??
+          d?.modeloDrone ??
+          d?.nomeModelo ??
+          d?.modelo_nome ??
+          null;
+        return (
+          typeof modelName === "string" &&
+          modelName.trim().toLowerCase() === q.toLowerCase()
+        );
+      });
+      setDronesList(filtered);
+    } catch (err) {
+      console.error("Erro na busca por modelo:", err);
+      setDronesList([]);
+    } finally {
+      setIsSearching(false);
     }
   };
 
@@ -155,9 +198,57 @@ const CreateDrones = () => {
       <div className="container p-2 my-3 leaflet-control-layers-scrollbar ">
         <div className="overflow-x-scrollcard bg-dark text-light p-3 shadow-sm">
           <h4 className="mb-3">Drones Cadastrados</h4>
+          {/* Barra de pesquisa por modelo */}
+          <form
+            className="mb-3"
+            onSubmit={(e) => {
+              e.preventDefault();
+              void searchByModel();
+            }}
+          >
+            <div className="input-group">
+              <input
+                type="search"
+                className="form-control"
+                placeholder="Buscar por modelo..."
+                aria-label="Buscar por modelo"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+              />
+              <button
+                className="btn btn-outline-light"
+                type="submit"
+                disabled={isSearching}
+              >
+                {isSearching ? (
+                  <span
+                    className="spinner-border spinner-border-sm"
+                    role="status"
+                    aria-hidden="true"
+                  ></span>
+                ) : (
+                  "Buscar"
+                )}
+              </button>
+              <button
+                type="button"
+                className="btn btn-secondary"
+                onClick={() => {
+                  setSearchTerm("");
+                  void refreshDronesList();
+                }}
+              >
+                Limpar
+              </button>
+            </div>
+          </form>
           {dronesList.length === 0 ? (
             <div className="d-flex align-items-center justify-content-center">
-              <span className="text-black-50">Nenhum drone cadastrado</span>
+              <span className="text-black-50">
+                {searchedTerm
+                  ? `Nenhum drone encontrado para "${searchedTerm}"`
+                  : "Nenhum drone cadastrado"}
+              </span>
             </div>
           ) : (
             <div className="d-flex flex-column mt-2">
