@@ -101,7 +101,7 @@ const About = () => {
                 <p>Integrações sólidas e seguras com back-ends modernos.</p>
               </div>
               <div className="col-md-3" data-aos="fade-up" data-aos-delay="400">
-                <i className="bi bi-cloud-arrow-up-fill display-5 mb-3"></i>
+                <i className=" bi bi-cloud-arrow-up-fill display-5 mb-3"></i>
                 <h5>Cloud</h5>
                 <p>Soluções escaláveis e prontas pro futuro.</p>
               </div>
@@ -114,21 +114,21 @@ const About = () => {
           <div className="container text-center">
             <h2 className="mb-4">Nossos Valores</h2>
             <div className="d-flex flex-wrap justify-content-center gap-4">
-              <span className="badge bg-light text-dark p-3 fs-6">
+              <span className=" badge bg-primary-subtle text-dark p-3 fs-6">
                 Inovação
               </span>
-              <span className="badge bg-light text-dark p-3 fs-6">
+              <span className="badge bg-primary-subtle text-dark p-3 fs-6">
                 Transparência
               </span>
-              <span className="badge bg-light text-dark p-3 fs-6">
+              <span className="badge bg-primary-subtle text-dark p-3 fs-6">
                 Simplicidade
               </span>
-              <span className="badge bg-light text-dark p-3 fs-6">
+              <span className="badge bg-primary-subtle text-dark p-3 fs-6">
                 Comunidade
-              </span><span className="badge bg-light text-dark p-3 fs-6">
+              </span><span className="badge bg-primary-subtle text-dark p-3 fs-6">
                 Sustentabilidade
               </span>
-              <span className="badge bg-light text-dark p-3 fs-6">
+              <span className="badge bg-primary-subtle text-dark p-3 fs-6">
                 Meio Ambiente
               </span>
             </div>

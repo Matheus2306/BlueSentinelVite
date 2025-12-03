@@ -78,7 +78,7 @@ function App() {
             </div>
             <img src={submarine} alt={t("SubmarineAlt")} className="w-100" />
             <div>
-              <div className="fw-bold fs-5">{t("DestinacaoSustentavel")}</div>
+              <div className=" fs-5">{t("DestinacaoSustentavel")}</div>
             </div>
             <img src={lixo} alt={t("LixoAlt")} className="w-100" />
           </div>
