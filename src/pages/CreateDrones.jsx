@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Header from "../components/Header";
 import { Navigate } from "react-router";
 import { token, apiFetch } from "../js/Token";
@@ -15,6 +15,11 @@ const CreateDrones = () => {
   const [role, setRole] = useState([]);
   const [user, setUser] = useState(null);
   const [dronesList, setDronesList] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [isSearching, setIsSearching] = useState(false);
+  const [searchedTerm, setSearchedTerm] = useState("");
+  const cache = useRef(new Map());
+
 
   useEffect(() => {
     if (!token) {
@@ -45,6 +50,60 @@ const CreateDrones = () => {
       setDronesList([]);
     }
   };
+
+  // Busca por modelo usando GET na API. Se searchTerm for vazio, recarrega a lista completa.
+  const searchByModel = async (term) => {
+  const raw = (term ?? searchTerm)?.trim();
+  if (!raw) {
+    setSearchedTerm("");
+    void refreshDronesList();
+    return;
+  }
+
+  // normaliza chave do cache
+  const q = raw.toLowerCase();
+  setSearchedTerm(raw);
+
+  // --- CHECK DO CACHE ---
+  if (cache.current.has(q)) {
+    console.log("⚡ Resultado vindo do cache!");
+    setDronesList(cache.current.get(q));
+    return;
+  }
+
+  setIsSearching(true);
+  try {
+    const path = `/api/DroneFabris?modelo=${encodeURIComponent(raw)}`;
+    const result = await getApi(path);
+    const items = Array.isArray(result) ? result : [];
+
+    const filtered = items.filter((d) => {
+      const modelName =
+        d?.modelo ??
+        d?.model ??
+        d?.modeloDrone ??
+        d?.nomeModelo ??
+        d?.modelo_nome ??
+        null;
+
+      return (
+        typeof modelName === "string" &&
+        modelName.trim().toLowerCase() === q
+      );
+    });
+
+    // --- SALVAR NO CACHE ---
+    cache.current.set(q, filtered);
+
+    setDronesList(filtered);
+  } catch (err) {
+    console.error("Erro na busca por modelo:", err);
+    setDronesList([]);
+  } finally {
+    setIsSearching(false);
+  }
+};
+
 
   // inicializa campos do modal
   function initNewDrone() {
@@ -155,9 +214,57 @@ const CreateDrones = () => {
       <div className="container p-2 my-3 leaflet-control-layers-scrollbar ">
         <div className="overflow-x-scrollcard bg-dark text-light p-3 shadow-sm">
           <h4 className="mb-3">Drones Cadastrados</h4>
+          {/* Barra de pesquisa por modelo */}
+          <form
+            className="mb-3"
+            onSubmit={(e) => {
+              e.preventDefault();
+              void searchByModel();
+            }}
+          >
+            <div className="input-group">
+              <input
+                type="search"
+                className="form-control"
+                placeholder="Buscar por modelo..."
+                aria-label="Buscar por modelo"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+              />
+              <button
+                className="btn btn-outline-light"
+                type="submit"
+                disabled={isSearching}
+              >
+                {isSearching ? (
+                  <span
+                    className="spinner-border spinner-border-sm"
+                    role="status"
+                    aria-hidden="true"
+                  ></span>
+                ) : (
+                  "Buscar"
+                )}
+              </button>
+              <button
+                type="button"
+                className="btn btn-secondary"
+                onClick={() => {
+                  setSearchTerm("");
+                  void refreshDronesList();
+                }}
+              >
+                Limpar
+              </button>
+            </div>
+          </form>
           {dronesList.length === 0 ? (
             <div className="d-flex align-items-center justify-content-center">
-              <span className="text-black-50">Nenhum drone cadastrado</span>
+              <span className="text-black-50">
+                {searchedTerm
+                  ? `Nenhum drone encontrado para "${searchedTerm}"`
+                  : "Nenhum drone cadastrado"}
+              </span>
             </div>
           ) : (
             <div className="d-flex flex-column mt-2">
