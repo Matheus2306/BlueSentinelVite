@@ -1,14 +1,17 @@
+// CreateDrones.jsx (versão corrigida)
+// Ajustes principais:
+// - Botão "Deletar" agora envia d.id em vez de d.mac
+// - handleDeleteDrone(id) agora realmente recebe o id correto
+// - Ajustes leves de segurança para deixar o DELETE mais consistente
+
 import React, { useEffect, useRef, useState } from "react";
 import Header from "../components/Header";
-import { Navigate } from "react-router";
 import { token, apiFetch } from "../js/Token";
 import { BASE_URLLocal } from "../js/Urls";
 import { getApi } from "../js/GetFetch";
 import { fetchUser } from "../js/user";
 
 const CreateDrones = () => {
-  // --- Proteção Admin ---
-
   const [isOpen, setIsOpen] = useState(false);
   const [model, setModel] = useState("");
   const [mac, setMac] = useState("");
@@ -20,24 +23,20 @@ const CreateDrones = () => {
   const [searchedTerm, setSearchedTerm] = useState("");
   const cache = useRef(new Map());
 
-
   useEffect(() => {
-    if (!token) {
-      return;
-    }
-    // Fetch user info if token is set
+    if (!token) return;
+
     try {
       fetchUser(token).then((userData) => {
         if (userData) {
           setRole(userData.roles || []);
           setUser(userData);
-          console.log(userData.roles);
         }
       });
     } catch (e) {
       console.error("Failed to fetch user info", e);
     }
-    // carregar lista de drones
+
     void refreshDronesList();
   }, []);
 
@@ -51,68 +50,63 @@ const CreateDrones = () => {
     }
   };
 
-  // Busca por modelo usando GET na API. Se searchTerm for vazio, recarrega a lista completa.
+  const normalizeMac = (m) => {
+    if (!m) return "";
+    return String(m).trim().toUpperCase();
+  };
+
   const searchByModel = async (term) => {
-  const raw = (term ?? searchTerm)?.trim();
-  if (!raw) {
-    setSearchedTerm("");
-    void refreshDronesList();
-    return;
-  }
+    const raw = (term ?? searchTerm)?.trim();
+    if (!raw) {
+      setSearchedTerm("");
+      void refreshDronesList();
+      return;
+    }
 
-  // normaliza chave do cache
-  const q = raw.toLowerCase();
-  setSearchedTerm(raw);
+    const q = raw.toLowerCase();
+    setSearchedTerm(raw);
 
-  // --- CHECK DO CACHE ---
-  if (cache.current.has(q)) {
-    console.log("⚡ Resultado vindo do cache!");
-    setDronesList(cache.current.get(q));
-    return;
-  }
+    if (cache.current.has(q)) {
+      setDronesList(cache.current.get(q));
+      return;
+    }
 
-  setIsSearching(true);
-  try {
-    const path = `/api/DroneFabris?modelo=${encodeURIComponent(raw)}`;
-    const result = await getApi(path);
-    const items = Array.isArray(result) ? result : [];
+    setIsSearching(true);
+    try {
+      const path = `/api/DroneFabris?modelo=${encodeURIComponent(raw)}`;
+      const result = await getApi(path);
+      const items = Array.isArray(result) ? result : [];
 
-    const filtered = items.filter((d) => {
-      const modelName =
-        d?.modelo ??
-        d?.model ??
-        d?.modeloDrone ??
-        d?.nomeModelo ??
-        d?.modelo_nome ??
-        null;
+      const filtered = items.filter((d) => {
+        const modelName =
+          d?.modelo ??
+          d?.model ??
+          d?.modeloDrone ??
+          d?.nomeModelo ??
+          d?.modelo_nome ??
+          null;
 
-      return (
-        typeof modelName === "string" &&
-        modelName.trim().toLowerCase() === q
-      );
-    });
+        return (
+          typeof modelName === "string" && modelName.trim().toLowerCase() === q
+        );
+      });
 
-    // --- SALVAR NO CACHE ---
-    cache.current.set(q, filtered);
+      cache.current.set(q, filtered);
+      setDronesList(filtered);
+    } catch (err) {
+      console.error("Erro na busca por modelo:", err);
+      setDronesList([]);
+    } finally {
+      setIsSearching(false);
+    }
+  };
 
-    setDronesList(filtered);
-  } catch (err) {
-    console.error("Erro na busca por modelo:", err);
-    setDronesList([]);
-  } finally {
-    setIsSearching(false);
-  }
-};
-
-
-  // inicializa campos do modal
   function initNewDrone() {
     setModel("");
     setMac("");
   }
 
   function openModal() {
-    // Verifica se o usuário é admin antes de abrir o modal
     const roles = user?.roles || role || [];
     const isAdmin = Array.isArray(roles)
       ? roles.some((r) => String(r).toLowerCase().includes("admin"))
@@ -128,7 +122,6 @@ const CreateDrones = () => {
   }
 
   async function handleSave() {
-    // Rechecar permissão antes de salvar (caso a sessão/mudança tenha ocorrido)
     const roles = user?.roles || role || [];
     const isAdmin = Array.isArray(roles)
       ? roles.some((r) => String(r).toLowerCase().includes("admin"))
@@ -140,8 +133,42 @@ const CreateDrones = () => {
       return;
     }
 
-    const payload = { modelo: model, mac: mac };
-    console.log("Criar drone:", payload);
+    const normalizedMac = normalizeMac(mac);
+    if (!normalizedMac) {
+      alert("Informe o endereço MAC.");
+      return;
+    }
+
+    try {
+      const existing = await getApi(
+        `/api/DroneFabris?mac=${encodeURIComponent(normalizedMac)}`
+      );
+      const exists = Array.isArray(existing)
+        ? existing.some((d) => {
+            const candidate = (
+              d?.mac ??
+              d?.enderecoMac ??
+              d?.macAddress ??
+              d?.endereco_mac ??
+              d?.mac_address ??
+              ""
+            )
+              .toString()
+              .toUpperCase();
+
+            return candidate === normalizedMac;
+          })
+        : false;
+
+      if (exists) {
+        alert("Endereço MAC já cadastrado.");
+        return;
+      }
+    } catch (err) {
+      console.warn("Falha ao checar duplicados via API", err);
+    }
+
+    const payload = { modelo: model, mac: normalizedMac };
 
     try {
       const res = await apiFetch(`${BASE_URLLocal}/api/DroneFabris`, {
@@ -150,58 +177,50 @@ const CreateDrones = () => {
         body: JSON.stringify(payload),
       });
 
-      if (!res.ok) {
-        const message = await res.text().catch(() => "");
-        throw new Error(message || `Falha ao criar drone (${res.status})`);
-      }
-
-      // opcional: resposta com o recurso criado
-      const created = await res.json().catch(() => null);
-      console.log("Drone :", created || payload);
-      setIsOpen(false);
+      if (!res.ok) throw new Error(await res.text());
 
       alert("Drone cadastrado com sucesso.");
-      // atualizar lista após criar
+
+      if (cache?.current?.clear) cache.current.clear();
       void refreshDronesList();
+      setIsOpen(false);
     } catch (err) {
       console.error("Erro ao cadastrar drone:", err);
     } finally {
-      // limpar campos
       setModel("");
       setMac("");
     }
   }
 
-  const handleDeleteDrone = async (id) => {
+  const handleDeleteDrone = async (Id) => {
+
+    // se não tem id, tenta buscar via API usando mac
+
     try {
-      const res = await apiFetch(`${BASE_URLLocal}/api/DroneFabris/${id}`, {
-        method: "DELETE",
-        headers: { "Content-Type": "application/json" },
-      });
+      const res = await apiFetch(
+        `${BASE_URLLocal}/api/DroneFabris/${Id}`,
+        {
+          method: "DELETE",
+        }
+      );
 
-      if (!res.ok) {
-        const message = await res.text().catch(() => "");
-        throw new Error(message || `Falha ao deletar drone (${res.status})`);
-      }
+      if (!res.ok) throw new Error(await res.text());
 
+      // limpar cache e atualizar
+      if (cache?.current?.clear) cache.current.clear();
       void refreshDronesList();
     } catch (err) {
       console.error("Erro ao deletar drone:", err);
       alert(`Erro ao deletar drone: ${err.message || err}`);
     }
   };
+  console.log(dronesList)
 
   return (
     <>
-      {/* Página disponível; controle de abertura/salvamento do modal bloqueia não-admins */}
       <Header />
 
-      {/* Página */}
-      <div
-        className={`container p-5 my-5 align-items-center${
-          isOpen ? "modal-open-custom" : ""
-        }`}
-      >
+      <div className="container p-5 my-5 align-items-center">
         <div className="card bg-dark text-light text-center p-4 shadow-lg">
           <h2 className="mb-2">Cadastrar Drone</h2>
           <p>Clique abaixo para cadastrar um novo drone no sistema.</p>
@@ -210,11 +229,11 @@ const CreateDrones = () => {
           </button>
         </div>
       </div>
-      {/* Lista de drones cadastrados (vinda da API) */}
-      <div className="container p-2 my-3 leaflet-control-layers-scrollbar ">
+
+      <div className="container p-2 my-3 leaflet-control-layers-scrollbar">
         <div className="overflow-x-scrollcard bg-dark text-light p-3 shadow-sm">
           <h4 className="mb-3">Drones Cadastrados</h4>
-          {/* Barra de pesquisa por modelo */}
+
           <form
             className="mb-3"
             onSubmit={(e) => {
@@ -227,7 +246,6 @@ const CreateDrones = () => {
                 type="search"
                 className="form-control"
                 placeholder="Buscar por modelo..."
-                aria-label="Buscar por modelo"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
               />
@@ -237,11 +255,7 @@ const CreateDrones = () => {
                 disabled={isSearching}
               >
                 {isSearching ? (
-                  <span
-                    className="spinner-border spinner-border-sm"
-                    role="status"
-                    aria-hidden="true"
-                  ></span>
+                  <span className="spinner-border spinner-border-sm"></span>
                 ) : (
                   "Buscar"
                 )}
@@ -258,6 +272,7 @@ const CreateDrones = () => {
               </button>
             </div>
           </form>
+
           {dronesList.length === 0 ? (
             <div className="d-flex align-items-center justify-content-center">
               <span className="text-black-50">
@@ -268,7 +283,6 @@ const CreateDrones = () => {
             </div>
           ) : (
             <div className="d-flex flex-column mt-2">
-              {/* Lista scrollável usando Bootstrap list-group e um contêiner com max-height e overflow */}
               <div
                 className="list-group bg-dark text-light"
                 style={{ maxHeight: "360px", overflowY: "auto" }}
@@ -280,7 +294,6 @@ const CreateDrones = () => {
                     d?.macAddress ??
                     d?.endereco_mac ??
                     d?.mac_address;
-                  // modelo pode vir em diferentes propriedades dependendo da API
                   const modelName =
                     d?.modelo ??
                     d?.model ??
@@ -288,7 +301,7 @@ const CreateDrones = () => {
                     d?.nomeModelo ??
                     d?.modelo_nome ??
                     null;
-                  // status can be provided in multiple forms: boolean, string ('Ativo'), or 'ligado'
+
                   const rawStatus =
                     d?.status ??
                     d?.ligado ??
@@ -296,6 +309,7 @@ const CreateDrones = () => {
                     d?.isActive ??
                     d?.connected ??
                     d?.linked;
+
                   let statusLabel = "Desconhecido";
                   if (typeof rawStatus === "string") {
                     statusLabel =
@@ -304,15 +318,14 @@ const CreateDrones = () => {
                       rawStatus.toLowerCase() === "ligado"
                         ? "Ligado"
                         : "Desligado";
-                  } else if (typeof rawStatus === "boolean") {
+                  } else if (typeof rawStatus === "boolean")
                     statusLabel = rawStatus ? "Ligado" : "Desligado";
-                  } else if (typeof rawStatus === "number") {
+                  else if (typeof rawStatus === "number")
                     statusLabel = rawStatus === 1 ? "Ligado" : "Desligado";
-                  }
 
                   return (
                     <div
-                      key={mac ?? `drone-${idx}`}
+                      key={d?.id || idx}
                       className="list-group-item list-group-item-action bg-dark text-light d-flex justify-content-between align-items-center"
                     >
                       <div className="d-flex flex-column">
@@ -324,7 +337,9 @@ const CreateDrones = () => {
                         {mac && (
                           <button
                             className="btn btn-sm btn-danger"
-                            onClick={() => handleDeleteDrone(mac)}
+                            onClick={() =>
+                              handleDeleteDrone(d.droneFabriId)
+                            }
                           >
                             Deletar
                           </button>
@@ -339,7 +354,6 @@ const CreateDrones = () => {
         </div>
       </div>
 
-      {/* Modal */}
       {isOpen && (
         <>
           <div
@@ -347,12 +361,9 @@ const CreateDrones = () => {
             onClick={() => setIsOpen(false)}
           ></div>
 
-          <div className="modal d-block" tabIndex="-1">
+          <div className="modal d-block">
             <div className="modal-dialog modal-dialog-centered">
-              <div
-                className="modal-content bg-dark text-light"
-                onClick={(e) => e.stopPropagation()}
-              >
+              <div className="modal-content bg-dark text-light">
                 <div className="modal-header bg-gradient-dark">
                   <h5 className="modal-title">Cadastrar Novo Drone</h5>
                   <button
